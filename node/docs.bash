@@ -8,24 +8,6 @@
 #
 
 
-# Open the node api on HEAD to the arguments section,
-# and bump markdown output to the console
-#
-# usage:
-#     node-md fs
-#     node-md path
-#     node-md vm
-#     node-md http
-#
-function node-md {
-  local page="$1" dir
-  [[ -z "$page" ]] && page="_toc"
-
-  local dir="$HOME/.dotfiles/node/doc/api/$page.markdown"
-  [[ -e "$dir" ]] || return 1
-  cat $dir
-}
-
 # Open the node api for your current version to the optional section,
 # using the default browser.
 #
@@ -97,8 +79,6 @@ _node_api_completion() {
 }
 
 
-complete -F _node_api_completion node-md
 complete -F _node_api_completion node-docs
-complete -F _node_api_completion node-man
 complete -F _node_api_completion node-src
 
