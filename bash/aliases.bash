@@ -11,7 +11,7 @@ alias tm='top -o vsize' # memory
 alias g="git status -s"
 alias gg="source ~/.bashrc"
 
-# update git hooks, habe to remove file before running git init again to catch up changes
+# update git hooks, have to remove file before running git init again to catch up changes
 alias gi="git-init"
 
 alias ls='ls -hF'
