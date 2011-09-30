@@ -1,0 +1,27 @@
+[submodule "vim/vim.ln/bundle/fugitive"]
+	path = vim/vim.ln/bundle/fugitive
+	url = http://github.com/tpope/vim-fugitive.git
+[submodule "vim/vim.ln/bundle/color-sampler-pack"]
+	path = vim/vim.ln/bundle/color-sampler-pack
+	url = git://github.com/vim-scripts/Color-Sampler-Pack.git
+[submodule "vim/vim.ln/bundle/nerdtree"]
+	path = vim/vim.ln/bundle/nerdtree
+	url = git://github.com/scrooloose/nerdtree.git
+[submodule "vim/vim.ln/bundle/vim-javascript"]
+	path = vim/vim.ln/bundle/vim-javascript
+	url = git://github.com/pangloss/vim-javascript.git
+[submodule "vim/vim.ln/bundle/nerdcommenter"]
+	path = vim/vim.ln/bundle/nerdcommenter
+	url = git://github.com/ddollar/nerdcommenter.git
+[submodule "vim/vim.ln/bundle/vim-markdown"]
+	path = vim/vim.ln/bundle/vim-markdown
+	url = git://github.com/tpope/vim-markdown.git
+[submodule "vim/vim.ln/bundle/vim-coffee-script"]
+	path = vim/vim.ln/bundle/vim-coffee-script
+	url = git://github.com/kchmck/vim-coffee-script.git
+[submodule "vim/vim.ln/bundle/gist-vim"]
+	path = vim/vim.ln/bundle/gist-vim
+	url = git://github.com/mattn/gist-vim.git
+[submodule "vim/vim.ln/bundle/syntastic"]
+	path = vim/vim.ln/bundle/syntastic
+	url = git://github.com/scrooloose/syntastic.git

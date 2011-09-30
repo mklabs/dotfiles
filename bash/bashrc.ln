@@ -1,0 +1,8 @@
+
+# Load all the `.bash` files in `.dotfiles` topics
+for i in ~/.dotfiles/**/*.bash; do
+  if [ -e $i ]; then
+    . $i
+  fi
+done
+
