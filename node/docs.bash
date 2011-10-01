@@ -25,3 +25,22 @@ function node-docs {
 	open "http://nodejs.org/docs/$(node --version)/api/$1.html#$2"
 }
 
+
+# bash completion \o/
+
+_node_api_completion() {
+  local cur prev opts
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  prev="${COMP_WORDS[COMP_CWORD-1]}"
+  opts="_toc addons all appendix_1 appendix_2 assert buffers child_processes crypto debugger dgram dns events fs globals http
+  https index modules net os path process querystring readline repl stdio streams string_decoder synopsis timers tls tty url util vm zlib
+  "
+  COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  return 0
+}
+
+
+complete -F _node_api_completion node-md
+complete -F _node_api_completion node-docs
+
