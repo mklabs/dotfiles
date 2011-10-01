@@ -1,6 +1,14 @@
-# Or source from bash aliases, which use the same syntax
 
 alias tu='top -o cpu' # cpu
 alias tm='top -o vsize' # memory
 
-alias g="git status"
+## git stuff
+alias g="git status -s"
+
+alias gg="source ~/.bashrc"
+
+alias ls='ls -hF'
+alias ll='ls -lhF'
+alias la='ls -A'
+alias l='ls -lAhF'
+
