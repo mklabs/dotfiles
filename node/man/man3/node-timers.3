@@ -1,0 +1,24 @@
+.\" Generated with Ronnjs/v0.1
+.\" http://github.com/kapouer/ronnjs/
+.
+.TH "NODE\-TIMERS" "3" "October 2011" "" ""
+.
+.SH "NAME"
+\fBnode-timers\fR \-\- http://nodejs\.org/docs/v0\.4\.8/api/timers\.html
+.
+.SH "Timers"
+.
+.SS "setTimeout(callback, delay, [arg], [\.\.\.])"
+To schedule execution of \fBcallback\fR after \fBdelay\fR milliseconds\. Returns a \fBtimeoutId\fR for possible use with \fBclearTimeout()\fR\|\. Optionally, you can
+also pass arguments to the callback\.
+.
+.SS "clearTimeout(timeoutId)"
+Prevents a timeout from triggering\.
+.
+.SS "setInterval(callback, delay, [arg], [\.\.\.])"
+To schedule the repeated execution of \fBcallback\fR every \fBdelay\fR milliseconds\.
+Returns a \fBintervalId\fR for possible use with \fBclearInterval()\fR\|\. Optionally,
+you can also pass arguments to the callback\.
+.
+.SS "clearInterval(intervalId)"
+Stops a interval from triggering\.

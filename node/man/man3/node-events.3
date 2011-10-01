@@ -1,0 +1,126 @@
+.\" Generated with Ronnjs/v0.1
+.\" http://github.com/kapouer/ronnjs/
+.
+.TH "NODE\-EVENTS" "3" "October 2011" "" ""
+.
+.SH "NAME"
+\fBnode-events\fR \-\- http://nodejs\.org/docs/v0\.4\.8/api/events\.html
+.
+.SH "Events"
+Many objects in Node emit events: a \fBnet\.Server\fR emits an event each time
+a peer connects to it, a \fBfs\.readStream\fR emits an event when the file is
+opened\. All objects which emit events are instances of \fBevents\.EventEmitter\fR\|\.
+You can access this module by doing: \fBrequire("events");\fR
+.
+.P
+Typically, event names are represented by a camel\-cased string, however,
+there aren\'t any strict restrictions on that, as any string will be accepted\.
+.
+.P
+Functions can then be attached to objects, to be executed when an event
+is emitted\. These functions are called \fIlisteners\fR\|\.
+.
+.SS "events\.EventEmitter"
+To access the EventEmitter class, \fBrequire(\'events\')\.EventEmitter\fR\|\.
+.
+.P
+When an \fBEventEmitter\fR instance experiences an error, the typical action is
+to emit an \fB\'error\'\fR event\.  Error events are treated as a special case in node\.
+If there is no listener for it, then the default action is to print a stack
+trace and exit the program\.
+.
+.P
+All EventEmitters emit the event \fB\'newListener\'\fR when new listeners are
+added\.
+.
+.TP
+emitter\.addListener(event, listener)
+.
+.TP
+emitter\.on(event, listener)
+.Adds a listener to the end of the listeners array for the specified event\.
+.
+.IP "" 4
+.
+.nf
+server\.on(\'connection\', function (stream) {
+  console\.log(\'someone connected!\');
+});
+.
+.fi
+.
+.IP "" 0
+.
+.TP
+emitter\.once(event, listener)
+.Adds a \fBone time\fR listener for the event\. The listener is
+invoked only the first time the event is fired, after which
+it is removed\.
+.
+.IP "" 4
+.
+.nf
+server\.once(\'connection\', function (stream) {
+  console\.log(\'Ah, we have our first user!\');
+});
+.
+.fi
+.
+.IP "" 0
+.
+.TP
+emitter\.removeListener(event, listener)
+.Remove a listener from the listener array for the specified event\. \fBCaution\fR: changes array indices in the listener array behind the listener\.
+.
+.IP "" 4
+.
+.nf
+var callback = function(stream) {
+  console\.log(\'someone connected!\');
+};
+server\.on(\'connection\', callback);
+// \.\.\.
+server\.removeListener(\'connection\', callback);
+.
+.fi
+.
+.IP "" 0
+.
+.TP
+emitter\.removeAllListeners([event])
+.Removes all listeners, or those of the specified event\.
+.
+.TP
+emitter\.setMaxListeners(n)
+.By default EventEmitters will print a warning if more than 10 listeners are
+added to it\. This is a useful default which helps finding memory leaks\.
+Obviously not all Emitters should be limited to 10\. This function allows
+that to be increased\. Set to zero for unlimited\.
+.
+.TP
+emitter\.listeners(event)
+.Returns an array of listeners for the specified event\. This array can be
+manipulated, e\.g\. to remove listeners\.
+.
+.IP "" 4
+.
+.nf
+server\.on(\'connection\', function (stream) {
+  console\.log(\'someone connected!\');
+});
+console\.log(util\.inspect(server\.listeners(\'connection\')); // [ [Function] ]
+.
+.fi
+.
+.IP "" 0
+.
+.TP
+emitter\.emit(event, [arg1], [arg2], [\.\.\.])
+.Execute each of the listeners in order with the supplied arguments\.
+.
+.TP
+Event: \'newListener\'
+.\fBfunction (event, listener) { }\fR
+.
+.P
+This event is emitted any time someone adds a new listener\.

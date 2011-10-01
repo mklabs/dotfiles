@@ -1,0 +1,553 @@
+.\" Generated with Ronnjs/v0.1
+.\" http://github.com/kapouer/ronnjs/
+.
+.TH "NODE\-FS" "3" "October 2011" "" ""
+.
+.SH "NAME"
+\fBnode-fs\fR \-\- http://nodejs\.org/docs/v0\.4\.8/api/fs\.html
+.
+.SH "File System"
+File I/O is provided by simple wrappers around standard POSIX functions\.  To
+use this module do \fBrequire(\'fs\')\fR\|\. All the methods have asynchronous and
+synchronous forms\.
+.
+.P
+The asynchronous form always take a completion callback as its last argument\.
+The arguments passed to the completion callback depend on the method, but the
+first argument is always reserved for an exception\. If the operation was
+completed successfully, then the first argument will be \fBnull\fR or \fBundefined\fR\|\.
+.
+.P
+Here is an example of the asynchronous version:
+.
+.IP "" 4
+.
+.nf
+var fs = require(\'fs\');
+fs\.unlink(\'/tmp/hello\', function (err) {
+  if (err) throw err;
+  console\.log(\'successfully deleted /tmp/hello\');
+});
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Here is the synchronous version:
+.
+.IP "" 4
+.
+.nf
+var fs = require(\'fs\');
+fs\.unlinkSync(\'/tmp/hello\')
+console\.log(\'successfully deleted /tmp/hello\');
+.
+.fi
+.
+.IP "" 0
+.
+.P
+With the asynchronous methods there is no guaranteed ordering\. So the
+following is prone to error:
+.
+.IP "" 4
+.
+.nf
+fs\.rename(\'/tmp/hello\', \'/tmp/world\', function (err) {
+  if (err) throw err;
+  console\.log(\'renamed complete\');
+});
+fs\.stat(\'/tmp/world\', function (err, stats) {
+  if (err) throw err;
+  console\.log(\'stats: \' + JSON\.stringify(stats));
+});
+.
+.fi
+.
+.IP "" 0
+.
+.P
+It could be that \fBfs\.stat\fR is executed before \fBfs\.rename\fR\|\.
+The correct way to do this is to chain the callbacks\.
+.
+.IP "" 4
+.
+.nf
+fs\.rename(\'/tmp/hello\', \'/tmp/world\', function (err) {
+  if (err) throw err;
+  fs\.stat(\'/tmp/world\', function (err, stats) {
+    if (err) throw err;
+    console\.log(\'stats: \' + JSON\.stringify(stats));
+  });
+});
+.
+.fi
+.
+.IP "" 0
+.
+.P
+In busy processes, the programmer is \fIstrongly encouraged\fR to use the
+asynchronous versions of these calls\. The synchronous versions will block
+the entire process until they complete\-\-halting all connections\.
+.
+.P
+Relative path to filename can be used, remember however that this path will be relative
+to \fBprocess\.cwd()\fR\|\.
+.
+.SS "fs\.rename(path1, path2, [callback])"
+Asynchronous rename(2)\. No arguments other than a possible exception are given
+to the completion callback\.
+.
+.SS "fs\.renameSync(path1, path2)"
+Synchronous rename(2)\.
+.
+.SS "fs\.truncate(fd, len, [callback])"
+Asynchronous ftruncate(2)\. No arguments other than a possible exception are
+given to the completion callback\.
+.
+.SS "fs\.truncateSync(fd, len)"
+Synchronous ftruncate(2)\.
+.
+.SS "fs\.chown(path, mode, [callback])"
+Asycnronous chown(2)\. No arguments other than a possible exception are given
+to the completion callback\.
+.
+.SS "fs\.chownSync(path, mode)"
+Synchronous chown(2)\.
+.
+.SS "fs\.fchown(path, mode, [callback])"
+Asycnronous fchown(2)\. No arguments other than a possible exception are given
+to the completion callback\.
+.
+.SS "fs\.fchownSync(path, mode)"
+Synchronous fchown(2)\.
+.
+.SS "fs\.lchown(path, mode, [callback])"
+Asycnronous lchown(2)\. No arguments other than a possible exception are given
+to the completion callback\.
+.
+.SS "fs\.lchownSync(path, mode)"
+Synchronous lchown(2)\.
+.
+.SS "fs\.chmod(path, mode, [callback])"
+Asynchronous chmod(2)\. No arguments other than a possible exception are given
+to the completion callback\.
+.
+.SS "fs\.chmodSync(path, mode)"
+Synchronous chmod(2)\.
+.
+.SS "fs\.fchmod(fd, mode, [callback])"
+Asynchronous fchmod(2)\. No arguments other than a possible exception
+are given to the completion callback\.
+.
+.SS "fs\.fchmodSync(path, mode)"
+Synchronous fchmod(2)\.
+.
+.SS "fs\.lchmod(fd, mode, [callback])"
+Asynchronous lchmod(2)\. No arguments other than a possible exception
+are given to the completion callback\.
+.
+.SS "fs\.lchmodSync(path, mode)"
+Synchronous lchmod(2)\.
+.
+.SS "fs\.stat(path, [callback])"
+Asynchronous stat(2)\. The callback gets two arguments \fB(err, stats)\fR where \fBstats\fR is a \fI`fs\.Stats`\fR object\. It looks like this:
+.
+.IP "" 4
+.
+.nf
+{ dev: 2049,
+  ino: 305352,
+  mode: 16877,
+  nlink: 12,
+  uid: 1000,
+  gid: 1000,
+  rdev: 0,
+  size: 4096,
+  blksize: 4096,
+  blocks: 8,
+  atime: \'2009\-06\-29T11:11:55Z\',
+  mtime: \'2009\-06\-29T11:11:40Z\',
+  ctime: \'2009\-06\-29T11:11:40Z\' }
+.
+.fi
+.
+.IP "" 0
+.
+.P
+See the \fIfs\.Stats\fR section below for more information\.
+.
+.SS "fs\.lstat(path, [callback])"
+Asynchronous lstat(2)\. The callback gets two arguments \fB(err, stats)\fR where \fBstats\fR is a \fBfs\.Stats\fR object\. \fBlstat()\fR is identical to \fBstat()\fR, except that if \fBpath\fR is a symbolic link, then the link itself is stat\-ed, not the file that it
+refers to\.
+.
+.SS "fs\.fstat(fd, [callback])"
+Asynchronous fstat(2)\. The callback gets two arguments \fB(err, stats)\fR where \fBstats\fR is a \fBfs\.Stats\fR object\. \fBfstat()\fR is identical to \fBstat()\fR, except that
+the file to be stat\-ed is specified by the file descriptor \fBfd\fR\|\.
+.
+.SS "fs\.statSync(path)"
+Synchronous stat(2)\. Returns an instance of \fBfs\.Stats\fR\|\.
+.
+.SS "fs\.lstatSync(path)"
+Synchronous lstat(2)\. Returns an instance of \fBfs\.Stats\fR\|\.
+.
+.SS "fs\.fstatSync(fd)"
+Synchronous fstat(2)\. Returns an instance of \fBfs\.Stats\fR\|\.
+.
+.SS "fs\.link(srcpath, dstpath, [callback])"
+Asynchronous link(2)\. No arguments other than a possible exception are given to
+the completion callback\.
+.
+.SS "fs\.linkSync(srcpath, dstpath)"
+Synchronous link(2)\.
+.
+.SS "fs\.symlink(linkdata, path, [callback])"
+Asynchronous symlink(2)\. No arguments other than a possible exception are given
+to the completion callback\.
+.
+.SS "fs\.symlinkSync(linkdata, path)"
+Synchronous symlink(2)\.
+.
+.SS "fs\.readlink(path, [callback])"
+Asynchronous readlink(2)\. The callback gets two arguments \fB(err,
+resolvedPath)\fR\|\.
+.
+.SS "fs\.readlinkSync(path)"
+Synchronous readlink(2)\. Returns the resolved path\.
+.
+.SS "fs\.realpath(path, [callback])"
+Asynchronous realpath(2)\.  The callback gets two arguments \fB(err,
+resolvedPath)\fR\|\.
+.
+.SS "fs\.realpathSync(path)"
+Synchronous realpath(2)\. Returns the resolved path\.
+.
+.SS "fs\.unlink(path, [callback])"
+Asynchronous unlink(2)\. No arguments other than a possible exception are given
+to the completion callback\.
+.
+.SS "fs\.unlinkSync(path)"
+Synchronous unlink(2)\.
+.
+.SS "fs\.rmdir(path, [callback])"
+Asynchronous rmdir(2)\. No arguments other than a possible exception are given
+to the completion callback\.
+.
+.SS "fs\.rmdirSync(path)"
+Synchronous rmdir(2)\.
+.
+.SS "fs\.mkdir(path, mode, [callback])"
+Asynchronous mkdir(2)\. No arguments other than a possible exception are given
+to the completion callback\.
+.
+.SS "fs\.mkdirSync(path, mode)"
+Synchronous mkdir(2)\.
+.
+.SS "fs\.readdir(path, [callback])"
+Asynchronous readdir(3)\.  Reads the contents of a directory\.
+The callback gets two arguments \fB(err, files)\fR where \fBfiles\fR is an array of
+the names of the files in the directory excluding \fB\'\.\'\fR and \fB\'\.\.\'\fR\|\.
+.
+.SS "fs\.readdirSync(path)"
+Synchronous readdir(3)\. Returns an array of filenames excluding \fB\'\.\'\fR and \fB\'\.\.\'\fR\|\.
+.
+.SS "fs\.close(fd, [callback])"
+Asynchronous close(2)\.  No arguments other than a possible exception are given
+to the completion callback\.
+.
+.SS "fs\.closeSync(fd)"
+Synchronous close(2)\.
+.
+.SS "fs\.open(path, flags, [mode], [callback])"
+Asynchronous file open\. See open(2)\. \fBflags\fR can be:
+.
+.IP "\(bu" 4
+\fB\'r\'\fR \- Open file for reading\.
+An exception occurs if the file does not exist\.
+.
+.IP "\(bu" 4
+\fB\'r+\'\fR \- Open file for reading and writing\. 
+An exception occurs if the file does not exist\.
+.
+.IP "\(bu" 4
+\fB\'w\'\fR \- Open file for writing\.
+The file is created (if it does not exist) or truncated (if it exists)\.
+.
+.IP "\(bu" 4
+\fB\'w+\'\fR \- Open file for reading and writing\.
+The file is created (if it does not exist) or truncated (if it exists)\.
+.
+.IP "\(bu" 4
+\fB\'a\'\fR \- Open file for appending\.
+The file is created if it does not exist\.
+.
+.IP "\(bu" 4
+\fB\'a+\'\fR \- Open file for reading and appending\.
+The file is created if it does not exist\.
+.
+.IP "" 0
+.
+.P
+\fBmode\fR defaults to \fB0666\fR\|\. The callback gets two arguments \fB(err, fd)\fR\|\.
+.
+.SS "fs\.openSync(path, flags, [mode])"
+Synchronous open(2)\.
+.
+.SS "fs\.utimes(path, atime, mtime, callback)"
+.
+.SS "fs\.utimesSync(path, atime, mtime)"
+Change file timestamps\.
+.
+.SS "fs\.futimes(path, atime, mtime, callback)"
+.
+.SS "fs\.futimesSync(path, atime, mtime)"
+Change file timestamps with the difference that if filename refers to a
+symbolic link, then the link is not dereferenced\.
+.
+.SS "fs\.fsync(fd, callback)"
+Asynchronous fsync(2)\. No arguments other than a possible exception are given
+to the completion callback\.
+.
+.SS "fs\.fsyncSync(fd)"
+Synchronous fsync(2)\.
+.
+.SS "fs\.write(fd, buffer, offset, length, position, [callback])"
+Write \fBbuffer\fR to the file specified by \fBfd\fR\|\.
+.
+.P
+\fBoffset\fR and \fBlength\fR determine the part of the buffer to be written\.
+.
+.P
+\fBposition\fR refers to the offset from the beginning of the file where this data
+should be written\. If \fBposition\fR is \fBnull\fR, the data will be written at the
+current position\.
+See pwrite(2)\.
+.
+.P
+The callback will be given three arguments \fB(err, written, buffer)\fR where \fBwritten\fR
+specifies how many \fIbytes\fR were written into \fBbuffer\fR\|\.
+.
+.P
+Note that it is unsafe to use \fBfs\.write\fR multiple times on the same file
+without waiting for the callback\. For this scenario, \fBfs\.createWriteStream\fR is strongly recommended\.
+.
+.SS "fs\.writeSync(fd, buffer, offset, length, position)"
+Synchronous version of buffer\-based \fBfs\.write()\fR\|\. Returns the number of bytes
+written\.
+.
+.SS "fs\.writeSync(fd, str, position, encoding=\'utf8\')"
+Synchronous version of string\-based \fBfs\.write()\fR\|\. Returns the number of bytes
+written\.
+.
+.SS "fs\.read(fd, buffer, offset, length, position, [callback])"
+Read data from the file specified by \fBfd\fR\|\.
+.
+.P
+\fBbuffer\fR is the buffer that the data will be written to\.
+.
+.P
+\fBoffset\fR is offset within the buffer where writing will start\.
+.
+.P
+\fBlength\fR is an integer specifying the number of bytes to read\.
+.
+.P
+\fBposition\fR is an integer specifying where to begin reading from in the file\.
+If \fBposition\fR is \fBnull\fR, data will be read from the current file position\.
+.
+.P
+The callback is given the three arguments, \fB(err, bytesRead, buffer)\fR\|\.
+.
+.SS "fs\.readSync(fd, buffer, offset, length, position)"
+Synchronous version of buffer\-based \fBfs\.read\fR\|\. Returns the number of \fBbytesRead\fR\|\.
+.
+.SS "fs\.readSync(fd, length, position, encoding)"
+Synchronous version of string\-based \fBfs\.read\fR\|\. Returns the number of \fBbytesRead\fR\|\.
+.
+.SS "fs\.readFile(filename, [encoding], [callback])"
+Asynchronously reads the entire contents of a file\. Example:
+.
+.IP "" 4
+.
+.nf
+fs\.readFile(\'/etc/passwd\', function (err, data) {
+  if (err) throw err;
+  console\.log(data);
+});
+.
+.fi
+.
+.IP "" 0
+.
+.P
+The callback is passed two arguments \fB(err, data)\fR, where \fBdata\fR is the
+contents of the file\.
+.
+.P
+If no encoding is specified, then the raw buffer is returned\.
+.
+.SS "fs\.readFileSync(filename, [encoding])"
+Synchronous version of \fBfs\.readFile\fR\|\. Returns the contents of the \fBfilename\fR\|\.
+.
+.P
+If \fBencoding\fR is specified then this function returns a string\. Otherwise it
+returns a buffer\.
+.
+.SS "fs\.writeFile(filename, data, encoding=\'utf8\', [callback])"
+Asynchronously writes data to a file, replacing the file if it already exists\. \fBdata\fR can be a string or a buffer\. The \fBencoding\fR argument is ignored if \fBdata\fR is a buffer\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+fs\.writeFile(\'message\.txt\', \'Hello Node\', function (err) {
+  if (err) throw err;
+  console\.log(\'It\\\'s saved!\');
+});
+.
+.fi
+.
+.IP "" 0
+.
+.SS "fs\.writeFileSync(filename, data, encoding=\'utf8\')"
+The synchronous version of \fBfs\.writeFile\fR\|\.
+.
+.SS "fs\.watchFile(filename, [options], listener)"
+Watch for changes on \fBfilename\fR\|\. The callback \fBlistener\fR will be called each
+time the file is accessed\.
+.
+.P
+The second argument is optional\. The \fBoptions\fR if provided should be an object
+containing two members a boolean, \fBpersistent\fR, and \fBinterval\fR, a polling
+value in milliseconds\. The default is \fB{ persistent: true, interval: 0 }\fR\|\.
+.
+.P
+The \fBlistener\fR gets two arguments the current stat object and the previous
+stat object:
+.
+.IP "" 4
+.
+.nf
+fs\.watchFile(f, function (curr, prev) {
+  console\.log(\'the current mtime is: \' + curr\.mtime);
+  console\.log(\'the previous mtime was: \' + prev\.mtime);
+});
+.
+.fi
+.
+.IP "" 0
+.
+.P
+These stat objects are instances of \fBfs\.Stat\fR\|\.
+.
+.P
+If you want to be notified when the file was modified, not just accessed
+you need to compare \fBcurr\.mtime\fR and `prev\.mtime\.
+.
+.SS "fs\.unwatchFile(filename)"
+Stop watching for changes on \fBfilename\fR\|\.
+.
+.SH "fs\.Stats"
+Objects returned from \fBfs\.stat()\fR and \fBfs\.lstat()\fR are of this type\.
+.
+.IP "\(bu" 4
+\fBstats\.isFile()\fR
+.
+.IP "\(bu" 4
+\fBstats\.isDirectory()\fR
+.
+.IP "\(bu" 4
+\fBstats\.isBlockDevice()\fR
+.
+.IP "\(bu" 4
+\fBstats\.isCharacterDevice()\fR
+.
+.IP "\(bu" 4
+\fBstats\.isSymbolicLink()\fR (only valid with  \fBfs\.lstat()\fR)
+.
+.IP "\(bu" 4
+\fBstats\.isFIFO()\fR
+.
+.IP "\(bu" 4
+\fBstats\.isSocket()\fR
+.
+.IP "" 0
+.
+.SH "fs\.ReadStream"
+\fBReadStream\fR is a \fBReadable Stream\fR\|\.
+.
+.SS "Event: \'open\'"
+\fBfunction (fd) { }\fR
+.
+.P
+ \fBfd\fR is the file descriptor used by the ReadStream\.
+.
+.SS "fs\.createReadStream(path, [options])"
+Returns a new ReadStream object (See \fBReadable Stream\fR)\.
+.
+.P
+\fBoptions\fR is an object with the following defaults:
+.
+.IP "" 4
+.
+.nf
+{ flags: \'r\',
+  encoding: null,
+  fd: null,
+  mode: 0666,
+  bufferSize: 64 * 1024
+}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+\fBoptions\fR can include \fBstart\fR and \fBend\fR values to read a range of bytes from
+the file instead of the entire file\.  Both \fBstart\fR and \fBend\fR are inclusive and
+start at 0\.
+.
+.P
+An example to read the last 10 bytes of a file which is 100 bytes long:
+.
+.IP "" 4
+.
+.nf
+fs\.createReadStream(\'sample\.txt\', {start: 90, end: 99});
+.
+.fi
+.
+.IP "" 0
+.
+.SH "fs\.WriteStream"
+\fBWriteStream\fR is a \fBWritable Stream\fR\|\.
+.
+.SS "Event: \'open\'"
+\fBfunction (fd) { }\fR
+.
+.P
+ \fBfd\fR is the file descriptor used by the WriteStream\.
+.
+.SS "file\.bytesWritten"
+The number of bytes written so far\. Does not include data that is still queued
+for writing\.
+.
+.SS "fs\.createWriteStream(path, [options])"
+Returns a new WriteStream object (See \fBWritable Stream\fR)\.
+.
+.P
+\fBoptions\fR is an object with the following defaults:
+.
+.IP "" 4
+.
+.nf
+{ flags: \'w\',
+  encoding: null,
+  mode: 0666 }
+.
+.fi
+.
+.IP "" 0

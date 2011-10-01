@@ -1,0 +1,121 @@
+.\" Generated with Ronnjs/v0.1
+.\" http://github.com/kapouer/ronnjs/
+.
+.TH "NODE\-ADDONS" "3" "October 2011" "" ""
+.
+.SH "NAME"
+\fBnode-addons\fR \-\- http://nodejs\.org/docs/v0\.4\.8/api/addons\.html
+.
+.SH "Addons"
+Addons are dynamically linked shared objects\. They can provide glue to C and
+C++ libraries\. The API (at the moment) is rather complex, involving
+knowledge of several libraries:
+.
+.IP "\(bu" 4
+V8 JavaScript, a C++ library\. Used for interfacing with JavaScript:
+creating objects, calling functions, etc\.  Documented mostly in the \fBv8\.h\fR header file (\fBdeps/v8/include/v8\.h\fR in the Node source tree)\.
+.
+.IP "\(bu" 4
+libev, C event loop library\. Anytime one needs to wait for a file
+descriptor to become readable, wait for a timer, or wait for a signal to
+received one will need to interface with libev\.  That is, if you perform
+any I/O, libev will need to be used\.  Node uses the \fBEV_DEFAULT\fR event
+loop\.  Documentation can be found here \fIhttp://cvs\.schmorp\.de/libev/ev\.html\fR\|\.
+.
+.IP "\(bu" 4
+libeio, C thread pool library\. Used to execute blocking POSIX system
+calls asynchronously\. Mostly wrappers already exist for such calls, in \fBsrc/file\.cc\fR so you will probably not need to use it\. If you do need it,
+look at the header file \fBdeps/libeio/eio\.h\fR\|\.
+.
+.IP "\(bu" 4
+Internal Node libraries\. Most importantly is the \fBnode::ObjectWrap\fR
+class which you will likely want to derive from\.
+.
+.IP "\(bu" 4
+Others\. Look in \fBdeps/\fR for what else is available\.
+.
+.IP "" 0
+.
+.P
+Node statically compiles all its dependencies into the executable\. When
+compiling your module, you don\'t need to worry about linking to any of these
+libraries\.
+.
+.P
+To get started let\'s make a small Addon which does the following except in
+C++:
+.
+.IP "" 4
+.
+.nf
+exports\.hello = \'world\';
+.
+.fi
+.
+.IP "" 0
+.
+.P
+To get started we create a file \fBhello\.cc\fR:
+.
+.IP "" 4
+.
+.nf
+#include <v8\.h>
+using namespace v8;
+extern "C" void
+init (Handle<Object> target)
+{
+  HandleScope scope;
+  target\->Set(String::New("hello"), String::New("world"));
+}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+This source code needs to be built into \fBhello\.node\fR, the binary Addon\. To
+do this we create a file called \fBwscript\fR which is python code and looks
+like this:
+.
+.IP "" 4
+.
+.nf
+srcdir = \'\.\'
+blddir = \'build\'
+VERSION = \'0\.0\.1\'
+def set_options(opt):
+  opt\.tool_options(\'compiler_cxx\')
+def configure(conf):
+  conf\.check_tool(\'compiler_cxx\')
+  conf\.check_tool(\'node_addon\')
+def build(bld):
+  obj = bld\.new_task_gen(\'cxx\', \'shlib\', \'node_addon\')
+  obj\.target = \'hello\'
+  obj\.source = \'hello\.cc\'
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Running \fBnode\-waf configure build\fR will create a file \fBbuild/default/hello\.node\fR which is our Addon\.
+.
+.P
+\fBnode\-waf\fR is just WAF \fIhttp://code\.google\.com/p/waf\fR, the python\-based build system\. \fBnode\-waf\fR is
+provided for the ease of users\.
+.
+.P
+All Node addons must export a function called \fBinit\fR with this signature:
+.
+.IP "" 4
+.
+.nf
+extern \'C\' void init (Handle<Object> target)
+.
+.fi
+.
+.IP "" 0
+.
+.P
+For the moment, that is all the documentation on addons\. Please see \fIhttps://github\.com/ry/node_postgres\fR for a real example\.

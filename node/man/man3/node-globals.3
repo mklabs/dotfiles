@@ -1,0 +1,97 @@
+.\" Generated with Ronnjs/v0.1
+.\" http://github.com/kapouer/ronnjs/
+.
+.TH "NODE\-GLOBALS" "3" "October 2011" "" ""
+.
+.SH "NAME"
+\fBnode-globals\fR \-\- http://nodejs\.org/docs/v0\.4\.8/api/globals\.html
+.
+.SH "Global Objects"
+These object are available in all modules\. Some of these objects aren\'t
+actually in the global scope but in the module scope \- this will be noted\.
+.
+.SS "global"
+The global namespace object\.
+.
+.P
+In browsers, the top\-level scope is the global scope\. That means that in
+browsers if you\'re in the global scope \fBvar something\fR will define a global
+variable\. In Node this is different\. The top\-level scope is not the global
+scope; \fBvar something\fR inside a Node module will be local to that module\.
+.
+.SS "process"
+The process object\. See the process object \fIprocess\.html#process\fR section\.
+.
+.SS "console"
+Used to print to stdout and stderr\. See the stdio \fIstdio\.html\fR section\.
+.
+.SS "Buffer"
+Used to handle binary data\. See the buffers \fIbuffers\.html\fR section\.
+.
+.SS "require()"
+To require modules\. See the Modules \fImodules\.html#modules\fR section\. \fBrequire\fR isn\'t actually a global but rather local to each module\.
+.
+.SS "require\.resolve()"
+Use the internal \fBrequire()\fR machinery to look up the location of a module,
+but rather than loading the module, just return the resolved filename\.
+.
+.SS "require\.cache"
+Modules are cached in this object when they are required\. By deleting a key
+value from this object, the next \fBrequire\fR will reload the module\.
+.
+.SS "__filename"
+The filename of the script being executed\.  This is the absolute path, and not necessarily
+the same filename passed in as a command line argument\.
+.
+.P
+Example: running \fBnode example\.js\fR from \fB/Users/mjr\fR
+.
+.IP "" 4
+.
+.nf
+console\.log(__filename);
+// /Users/mjr/example\.js
+.
+.fi
+.
+.IP "" 0
+.
+.P
+\fB__filename\fR isn\'t actually a global but rather local to each module\.
+.
+.SS "__dirname"
+The dirname of the script being executed\.
+.
+.P
+Example: running \fBnode example\.js\fR from \fB/Users/mjr\fR
+.
+.IP "" 4
+.
+.nf
+console\.log(__dirname);
+// /Users/mjr
+.
+.fi
+.
+.IP "" 0
+.
+.P
+\fB__dirname\fR isn\'t actually a global but rather local to each module\.
+.
+.SS "module"
+A reference to the current module\. In particular \fBmodule\.exports\fR is the same as the \fBexports\fR object\. See \fBsrc/node\.js\fR
+for more information\. \fBmodule\fR isn\'t actually a global but rather local to each module\.
+.
+.SS "exports"
+An object which is shared between all instances of the current module and
+made accessible through \fBrequire()\fR\|\. \fBexports\fR is the same as the \fBmodule\.exports\fR object\. See \fBsrc/node\.js\fR
+for more information\. \fBexports\fR isn\'t actually a global but rather local to each module\.
+.
+.SS "setTimeout(cb, ms)"
+.
+.SS "clearTimeout(t)"
+.
+.SS "setInterval(cb, ms)"
+.
+.SS "clearInterval(t)"
+The timer functions are global variables\. See the timers \fItimers\.html\fR section\.

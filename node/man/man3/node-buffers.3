@@ -1,0 +1,548 @@
+.\" Generated with Ronnjs/v0.1
+.\" http://github.com/kapouer/ronnjs/
+.
+.TH "NODE\-BUFFERS" "3" "October 2011" "" ""
+.
+.SH "NAME"
+\fBnode-buffers\fR \-\- http://nodejs\.org/docs/v0\.4\.8/api/buffers\.html
+.
+.SH "Buffers"
+Pure Javascript is Unicode friendly but not nice to binary data\.  When
+dealing with TCP streams or the file system, it\'s necessary to handle octet
+streams\. Node has several strategies for manipulating, creating, and
+consuming octet streams\.
+.
+.P
+Raw data is stored in instances of the \fBBuffer\fR class\. A \fBBuffer\fR is similar
+to an array of integers but corresponds to a raw memory allocation outside
+the V8 heap\. A \fBBuffer\fR cannot be resized\.
+.
+.P
+The \fBBuffer\fR object is global\.
+.
+.P
+Converting between Buffers and JavaScript string objects requires an explicit encoding
+method\.  Here are the different string encodings;
+.
+.IP "\(bu" 4
+\fB\'ascii\'\fR \- for 7 bit ASCII data only\.  This encoding method is very fast, and will
+strip the high bit if set\.
+Note that this encoding converts a null character (\fB\'\\0\'\fR or \fB\'\\u0000\'\fR) into \fB0x20\fR (character code of a space)\. If you want to convert a null character
+into \fB0x00\fR, you should use \fB\'utf8\'\fR\|\.
+.
+.IP "\(bu" 4
+\fB\'utf8\'\fR \- Multi byte encoded Unicode characters\.  Many web pages and other document formats use UTF\-8\.
+.
+.IP "\(bu" 4
+\fB\'ucs2\'\fR \- 2\-bytes, little endian encoded Unicode characters\. It can encode
+only BMP(Basic Multilingual Plane, U+0000 \- U+FFFF)\.
+.
+.IP "\(bu" 4
+\fB\'base64\'\fR \- Base64 string encoding\.
+.
+.IP "\(bu" 4
+\fB\'binary\'\fR \- A way of encoding raw binary data into strings by using only
+the first 8 bits of each character\. This encoding method is deprecated and
+should be avoided in favor of \fBBuffer\fR objects where possible\. This encoding
+will be removed in future versions of Node\.
+.
+.IP "\(bu" 4
+\fB\'hex\'\fR \- Encode each byte as two hexidecimal characters\.
+.
+.IP "" 0
+.
+.SS "new Buffer(size)"
+Allocates a new buffer of \fBsize\fR octets\.
+.
+.SS "new Buffer(array)"
+Allocates a new buffer using an \fBarray\fR of octets\.
+.
+.SS "new Buffer(str, encoding=\'utf8\')"
+Allocates a new buffer containing the given \fBstr\fR\|\.
+.
+.SS "buffer\.write(string, offset=0, length=buffer\.length\-offset, encoding=\'utf8\')"
+Writes \fBstring\fR to the buffer at \fBoffset\fR using the given encoding\. \fBlength\fR is
+the number of bytes to write\. Returns number of octets written\. If \fBbuffer\fR did
+not contain enough space to fit the entire string, it will write a partial
+amount of the string\. The method will not write partial characters\.
+.
+.P
+Example: write a utf8 string into a buffer, then print it
+.
+.IP "" 4
+.
+.nf
+buf = new Buffer(256);
+len = buf\.write(\'\\u00bd + \\u00bc = \\u00be\', 0);
+console\.log(len + " bytes: " + buf\.toString(\'utf8\', 0, len));
+.
+.fi
+.
+.IP "" 0
+.
+.P
+The number of characters written (which may be different than the number of
+bytes written) is set in \fBBuffer\._charsWritten\fR and will be overwritten the
+next time \fBbuf\.write()\fR is called\.
+.
+.SS "buffer\.toString(encoding, start=0, end=buffer\.length)"
+Decodes and returns a string from buffer data encoded with \fBencoding\fR
+beginning at \fBstart\fR and ending at \fBend\fR\|\.
+.
+.P
+See \fBbuffer\.write()\fR example, above\.
+.
+.SS "buffer[index]"
+Get and set the octet at \fBindex\fR\|\. The values refer to individual bytes,
+so the legal range is between \fB0x00\fR and \fB0xFF\fR hex or \fB0\fR and \fB255\fR\|\.
+.
+.P
+Example: copy an ASCII string into a buffer, one byte at a time:
+.
+.IP "" 4
+.
+.nf
+str = "node\.js";
+buf = new Buffer(str\.length);
+for (var i = 0; i < str\.length ; i++) {
+  buf[i] = str\.charCodeAt(i);
+}
+console\.log(buf);
+// node\.js
+.
+.fi
+.
+.IP "" 0
+.
+.SS "Buffer\.isBuffer(obj)"
+Tests if \fBobj\fR is a \fBBuffer\fR\|\.
+.
+.SS "Buffer\.byteLength(string, encoding=\'utf8\')"
+Gives the actual byte length of a string\.  This is not the same as \fBString\.prototype\.length\fR since that returns the number of \fIcharacters\fR in a
+string\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+str = \'\\u00bd + \\u00bc = \\u00be\';
+console\.log(str + ": " + str\.length + " characters, " +
+  Buffer\.byteLength(str, \'utf8\') + " bytes");
+// ½ + ¼ = ¾: 9 characters, 12 bytes
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.length"
+The size of the buffer in bytes\.  Note that this is not necessarily the size
+of the contents\. \fBlength\fR refers to the amount of memory allocated for the
+buffer object\.  It does not change when the contents of the buffer are changed\.
+.
+.IP "" 4
+.
+.nf
+buf = new Buffer(1234);
+console\.log(buf\.length);
+buf\.write("some string", "ascii", 0);
+console\.log(buf\.length);
+// 1234
+// 1234
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer\.length)"
+Does a memcpy() between buffers\.
+.
+.P
+Example: build two Buffers, then copy \fBbuf1\fR from byte 16 through byte 19
+into \fBbuf2\fR, starting at the 8th byte in \fBbuf2\fR\|\.
+.
+.IP "" 4
+.
+.nf
+buf1 = new Buffer(26);
+buf2 = new Buffer(26);
+for (var i = 0 ; i < 26 ; i++) {
+  buf1[i] = i + 97; // 97 is ASCII a
+  buf2[i] = 33; // ASCII !
+}
+buf1\.copy(buf2, 8, 16, 20);
+console\.log(buf2\.toString(\'ascii\', 0, 25));
+// !!!!!!!!qrst!!!!!!!!!!!!!
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.slice(start, end=buffer\.length)"
+Returns a new buffer which references the
+same memory as the old, but offset and cropped by the \fBstart\fR and \fBend\fR
+indexes\.
+.
+.P
+\fBModifying the new buffer slice will modify memory in the original buffer!\fR
+.
+.P
+Example: build a Buffer with the ASCII alphabet, take a slice, then modify one byte
+from the original Buffer\.
+.
+.IP "" 4
+.
+.nf
+var buf1 = new Buffer(26);
+for (var i = 0 ; i < 26 ; i++) {
+  buf1[i] = i + 97; // 97 is ASCII a
+}
+var buf2 = buf1\.slice(0, 3);
+console\.log(buf2\.toString(\'ascii\', 0, buf2\.length));
+buf1[0] = 33;
+console\.log(buf2\.toString(\'ascii\', 0, buf2\.length));
+// abc
+// !bc
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.readUInt8(offset, bigEndian)"
+Reads an unsigned 8 bit integer from the buffer at the specified offset\. If \fBbigEndian\fR is true, reads bytes in a big endian format, otherwise reads them as
+little endian\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var buf = new Buffer(4);
+buf[0] = 0x3;
+buf[1] = 0x4;
+buf[2] = 0x23;
+buf[3] = 0x42;
+for (ii = 0; ii < buf\.length; ii++) {
+  console\.log(buf\.readUInt8(ii, true));
+  console\.log(buf\.readUInt8(ii, false));
+}
+// 0x3
+// 0x3
+// 0x4
+// 0x4
+// 0x23
+// 0x23
+// 0x42
+// 0x42
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.readUInt16(offset, bigEndian)"
+Reads an unsigned 16 bit integer from the buffer at the specified offset\. If \fBbigEndian\fR is true, reads bytes in a big endian format, otherwise reads them as
+little endian\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var buf = new Buffer(4);
+buf[0] = 0x3;
+buf[1] = 0x4;
+buf[2] = 0x23;
+buf[3] = 0x42;
+console\.log(buf\.readUInt16(0, true));
+console\.log(buf\.readUInt16(0, false));
+console\.log(buf\.readUInt16(1, true));
+console\.log(buf\.readUInt16(1, false));
+console\.log(buf\.readUInt16(2, true));
+console\.log(buf\.readUInt16(2, false));
+// 0x0304
+// 0x0403
+// 0x0423
+// 0x2304
+// 0x2342
+// 0x4223
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.readUInt32(offset, bigEndian)"
+Reads an unsigned 32 bit integer from the buffer at the specified offset\. If \fBbigEndian\fR is true, reads bytes in a big endian format, otherwise reads them as
+little endian\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var buf = new Buffer(4);
+buf[0] = 0x3;
+buf[1] = 0x4;
+buf[2] = 0x23;
+buf[3] = 0x42;
+console\.log(buf\.readUInt32(0, true));
+console\.log(buf\.readUInt32(0, false));
+// 0x03042342
+// 0x42230403
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.readInt8(offset, bigEndian)"
+Reads a signed 8 bit integer from the buffer at the specified offset\. If \fBbigEndian\fR is true, reads bytes in a big endian format, otherwise reads them as
+little endian\.
+.
+.P
+Works as \fBbuffer\.readUInt8\fR, except buffer contents are treated as twos
+complement signed values\.
+.
+.SS "buffer\.readInt16(offset, bigEndian)"
+Reads a signed 16 bit integer from the buffer at the specified offset\. If \fBbigEndian\fR is true, reads bytes in a big endian format, otherwise reads them as
+little endian\.
+.
+.P
+Works as \fBbuffer\.readUInt16\fR, except buffer contents are treated as twos
+complement signed values\.
+.
+.SS "buffer\.readInt32(offset, bigEndian)"
+Reads a signed 32 bit integer from the buffer at the specified offset\. If \fBbigEndian\fR is true, reads bytes in a big endian format, otherwise reads them as
+little endian\.
+.
+.P
+Works as \fBbuffer\.readUInt32\fR, except buffer contents are treated as twos
+complement signed values\.
+.
+.SS "buffer\.readFloat(offset, bigEndian)"
+Reads a 32 bit float from the buffer at the specified offset\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var buf = new Buffer(4);
+buf[0] = 0x00;
+buf[1] = 0x00;
+buf[2] = 0x80;
+buf[3] = 0x3f;
+console\.log(buf\.readFloat(0, false));
+// 0x01
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.readDouble(offset, bigEndian)"
+Reads a 64 bit double from the buffer at the specified offset\. Endian must be
+either true or false and specifies what endian ordering to read the bytes
+from the buffer in\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var buf = new Buffer(8);
+buf[0] = 0x55;
+buf[1] = 0x55;
+buf[2] = 0x55;
+buf[3] = 0x55;
+buf[4] = 0x55;
+buf[5] = 0x55;
+buf[6] = 0xd5;
+buf[7] = 0x3f;
+console\.log(buf\.readDouble(0, false));
+// 0\.3333333333333333
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.writeUInt8(value, offset, bigEndian)"
+Writes \fBvalue\fR to the buffer at the specified offset with specified endian
+format\. Note, \fBvalue\fR must be a valid 8 bit unsigned integer\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var buf = new Buffer(4);
+buf\.writeUInt8(0x3, 0, true);
+buf\.writeUInt8(0x4, 1, true);
+buf\.writeUInt8(0x23, 2, true);
+buf\.writeUInt8(0x42, 3, true);
+console\.log(buf);
+buf\.writeUInt8(0x3, 0, false);
+buf\.writeUInt8(0x4, 1, false);
+buf\.writeUInt8(0x23, 2, false);
+buf\.writeUInt8(0x42, 3, false);
+console\.log(buf);
+// <Buffer 03 04 23 42>
+// <Buffer 03 04 23 42>
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.writeUInt16(value, offset, bigEndian)"
+Writes \fBvalue\fR to the buffer at the specified offset with specified endian
+format\. Note, \fBvalue\fR must be a valid 16 bit unsigned integer\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var buf = new Buffer(4);
+buf\.writeUInt16(0xdead, 0, true);
+buf\.writeUInt16(0xbeef, 2, true);
+console\.log(buf);
+buf\.writeUInt16(0xdead, 0, false);
+buf\.writeUInt16(0xbeef, 2, false);
+console\.log(buf);
+// <Buffer de ad be ef>
+// <Buffer ad de ef be>
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.writeUInt32(value, offset, bigEndian)"
+Writes \fBvalue\fR to the buffer at the specified offset with specified endian
+format\. Note, \fBvalue\fR must be a valid 32 bit unsigned integer\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var buf = new Buffer(4);
+buf\.writeUInt32(0xfeedface, 0, true);
+console\.log(buf);
+buf\.writeUInt32(0xfeedface, 0, false);
+console\.log(buf);
+// <Buffer fe ed fa ce>
+// <Buffer ce fa ed fe>
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.writeInt8(value, offset, bigEndian)"
+Writes \fBvalue\fR to the buffer at the specified offset with specified endian
+format\. Note, \fBvalue\fR must be a valid 16 bit signed integer\.
+.
+.P
+Works as \fBbuffer\.writeUInt8\fR, except value is written out as a two\'s complement
+signed integer into \fBbuffer\fR\|\.
+.
+.SS "buffer\.writeInt16(value, offset, bigEndian)"
+Writes \fBvalue\fR to the buffer at the specified offset with specified endian
+format\. Note, \fBvalue\fR must be a valid 16 bit unsigned integer\.
+.
+.P
+Works as \fBbuffer\.writeUInt16\fR, except value is written out as a two\'s complement
+signed integer into \fBbuffer\fR\|\.
+.
+.SS "buffer\.writeInt32(value, offset, bigEndian)"
+Writes \fBvalue\fR to the buffer at the specified offset with specified endian
+format\. Note, \fBvalue\fR must be a valid 32 bit signed integer\.
+.
+.P
+Works as \fBbuffer\.writeUInt32\fR, except value is written out as a two\'s complement
+signed integer into \fBbuffer\fR\|\.
+.
+.SS "buffer\.writeFloat(value, offset, bigEndian)"
+Writes \fBvalue\fR to the buffer at the specified offset with specified endian
+format\. Note, \fBvalue\fR must be a valid 32 bit float\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var buf = new Buffer(4);
+buf\.writeFloat(0xcafebabe, 0, true);
+console\.log(buf);
+buf\.writeFloat(0xcafebabe, 0, false);
+console\.log(buf);
+// <Buffer 4f 4a fe bb>
+// <Buffer bb fe 4a 4f>
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.writeDouble(value, offset, bigEndian)"
+Writes \fBvalue\fR to the buffer at the specified offset with specified endian
+format\. Note, \fBvalue\fR must be a valid 64 bit double\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var buf = new Buffer(8);
+buf\.writeFloat(0xdeadbeefcafebabe, 0, true);
+console\.log(buf);
+buf\.writeFloat(0xdeadbeefcafebabe, 0, false);
+console\.log(buf);
+// <Buffer 43 eb d5 b7 dd f9 5f d7>
+// <Buffer d7 5f f9 dd b7 d5 eb 43>
+.
+.fi
+.
+.IP "" 0
+.
+.SS "buffer\.readUInt8NoChk(value, offset, bigEndian)"
+.
+.SS "buffer\.readUInt16NoChk(value, offset, bigEndian)"
+.
+.SS "buffer\.readUInt32NoChk(value, offset, bigEndian)"
+.
+.SS "buffer\.writeUInt8NoChk(value, offset, bigEndian)"
+.
+.SS "buffer\.writeUInt16NoChk(value, offset, bigEndian)"
+.
+.SS "buffer\.writeUInt32NoChk(value, offset, bigEndian)"
+These functions all work as per the versions without the NoChk suffix\. These
+functions allow you to do use the raw functionality without any kind of
+validation for correctness\. This means that value may be too large for the
+specific function and offset may be beyond the end of the buffer leading to the
+values being silently dropped\. These should not be used unless you are certain
+of correctness\.
+.
+.SS "buffer\.fill(value, offset=0, length=\-1)"
+Fills the buffer with the specified value\. If the offset and length are not
+given it will fill the entire buffer\.
+.
+.IP "" 4
+.
+.nf
+var b = new Buffer(50);
+b\.fill("h");
+.
+.fi
+.
+.IP "" 0
+.
+.SS "INSPECT_MAX_BYTES"
+How many bytes will be returned when \fBb\.inspect()\fR is called\. This can
+be overriden by user modules\.

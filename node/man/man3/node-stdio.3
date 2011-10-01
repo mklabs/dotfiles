@@ -1,0 +1,62 @@
+.\" Generated with Ronnjs/v0.1
+.\" http://github.com/kapouer/ronnjs/
+.
+.TH "NODE\-STDIO" "3" "October 2011" "" ""
+.
+.SH "NAME"
+\fBnode-stdio\fR \-\- http://nodejs\.org/docs/v0\.4\.8/api/stdio\.html
+.
+.SH "console"
+Browser\-like object for printing to stdout and stderr\.
+.
+.SS "console\.log()"
+Prints to stdout with newline\. This function can take multiple arguments in a \fBprintf()\fR\-like way\. Example:
+.
+.IP "" 4
+.
+.nf
+console\.log(\'count: %d\', count);
+.
+.fi
+.
+.IP "" 0
+.
+.P
+If formating elements are not found in the first string then \fButil\.inspect\fR
+is used on each argument\.
+.
+.SS "console\.info()"
+Same as \fBconsole\.log\fR\|\.
+.
+.SS "console\.warn()"
+.
+.SS "console\.error()"
+Same as \fBconsole\.log\fR but prints to stderr\.
+.
+.SS "console\.dir(obj)"
+Uses \fButil\.inspect\fR on \fBobj\fR and prints resulting string to stderr\.
+.
+.SS "console\.time(label)"
+Mark a time\.
+.
+.SS "console\.timeEnd(label)"
+Finish timer, record output\. Example
+.
+.IP "" 4
+.
+.nf
+console\.time(\'100\-elements\');
+for (var i = 0; i < 100; i++) {
+  ;
+}
+console\.timeEnd(\'100\-elements\');
+.
+.fi
+.
+.IP "" 0
+.
+.SS "console\.trace()"
+Print a stack trace to stderr of the current position\.
+.
+.SS "console\.assert()"
+Same as \fBassert\.ok()\fR\|\.

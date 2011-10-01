@@ -1,0 +1,833 @@
+.\" Generated with Ronnjs/v0.1
+.\" http://github.com/kapouer/ronnjs/
+.
+.TH "NODE\-HTTP" "3" "October 2011" "" ""
+.
+.SH "NAME"
+\fBnode-http\fR \-\- http://nodejs\.org/docs/v0\.4\.8/api/http\.html
+.
+.SH "HTTP"
+To use the HTTP server and client one must \fBrequire(\'http\')\fR\|\.
+.
+.P
+The HTTP interfaces in Node are designed to support many features
+of the protocol which have been traditionally difficult to use\.
+In particular, large, possibly chunk\-encoded, messages\. The interface is
+careful to never buffer entire requests or responses\-\-the
+user is able to stream data\.
+.
+.P
+HTTP message headers are represented by an object like this:
+.
+.IP "" 4
+.
+.nf
+{ \'content\-length\': \'123\',
+  \'content\-type\': \'text/plain\',
+  \'connection\': \'keep\-alive\',
+  \'accept\': \'*/*\' }
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Keys are lowercased\. Values are not modified\.
+.
+.P
+In order to support the full spectrum of possible HTTP applications, Node\'s
+HTTP API is very low\-level\. It deals with stream handling and message
+parsing only\. It parses a message into headers and body but it does not
+parse the actual headers or the body\.
+.
+.SH "http\.Server"
+This is an \fBEventEmitter\fR with the following events:
+.
+.SS "Event: \'request\'"
+\fBfunction (request, response) { }\fR
+.
+.P
+Emitted each time there is request\. Note that there may be multiple requests
+per connection (in the case of keep\-alive connections)\.
+ \fBrequest\fR is an instance of \fBhttp\.ServerRequest\fR and \fBresponse\fR is
+ an instance of \fBhttp\.ServerResponse\fR
+.
+.SS "Event: \'connection\'"
+\fBfunction (socket) { }\fR
+.
+.P
+ When a new TCP stream is established\. \fBsocket\fR is an object of type
+ \fBnet\.Socket\fR\|\. Usually users will not want to access this event\. The
+ \fBsocket\fR can also be accessed at \fBrequest\.connection\fR\|\.
+.
+.SS "Event: \'close\'"
+\fBfunction (errno) { }\fR
+.
+.P
+ Emitted when the server closes\.
+.
+.SS "Event: \'checkContinue\'"
+\fBfunction (request, response) { }\fR
+.
+.P
+Emitted each time a request with an http Expect: 100\-continue is received\.
+If this event isn\'t listened for, the server will automatically respond
+with a 100 Continue as appropriate\.
+.
+.P
+Handling this event involves calling \fBresponse\.writeContinue\fR if the client
+should continue to send the request body, or generating an appropriate HTTP
+response (e\.g\., 400 Bad Request) if the client should not continue to send the
+request body\.
+.
+.P
+Note that when this event is emitted and handled, the \fBrequest\fR event will
+not be emitted\.
+.
+.SS "Event: \'upgrade\'"
+\fBfunction (request, socket, head) { }\fR
+.
+.P
+Emitted each time a client requests a http upgrade\. If this event isn\'t
+listened for, then clients requesting an upgrade will have their connections
+closed\.
+.
+.IP "\(bu" 4
+\fBrequest\fR is the arguments for the http request, as it is in the request event\.
+.
+.IP "\(bu" 4
+\fBsocket\fR is the network socket between the server and client\.
+.
+.IP "\(bu" 4
+\fBhead\fR is an instance of Buffer, the first packet of the upgraded stream, this may be empty\.
+.
+.IP "" 0
+.
+.P
+After this event is emitted, the request\'s socket will not have a \fBdata\fR
+event listener, meaning you will need to bind to it in order to handle data
+sent to the server on that socket\.
+.
+.SS "Event: \'clientError\'"
+\fBfunction (exception) { }\fR
+.
+.P
+If a client connection emits an \'error\' event \- it will forwarded here\.
+.
+.SS "http\.createServer([requestListener])"
+Returns a new web server object\.
+.
+.P
+The \fBrequestListener\fR is a function which is automatically
+added to the \fB\'request\'\fR event\.
+.
+.SS "server\.listen(port, [hostname], [callback])"
+Begin accepting connections on the specified port and hostname\.  If the
+hostname is omitted, the server will accept connections directed to any
+IPv4 address (\fBINADDR_ANY\fR)\.
+.
+.P
+To listen to a unix socket, supply a filename instead of port and hostname\.
+.
+.P
+This function is asynchronous\. The last parameter \fBcallback\fR will be called
+when the server has been bound to the port\.
+.
+.SS "server\.listen(path, [callback])"
+Start a UNIX socket server listening for connections on the given \fBpath\fR\|\.
+.
+.P
+This function is asynchronous\. The last parameter \fBcallback\fR will be called
+when the server has been bound\.
+.
+.SS "server\.close()"
+Stops the server from accepting new connections\.
+.
+.SH "http\.ServerRequest"
+This object is created internally by a HTTP server \-\- not by
+the user \-\- and passed as the first argument to a \fB\'request\'\fR listener\.
+.
+.P
+This is an \fBEventEmitter\fR with the following events:
+.
+.SS "Event: \'data\'"
+\fBfunction (chunk) { }\fR
+.
+.P
+Emitted when a piece of the message body is received\.
+.
+.P
+Example: A chunk of the body is given as the single
+argument\. The transfer\-encoding has been decoded\.  The
+body chunk is a string\.  The body encoding is set with \fBrequest\.setEncoding()\fR\|\.
+.
+.SS "Event: \'end\'"
+\fBfunction () { }\fR
+.
+.P
+Emitted exactly once for each request\. After that, no more \fB\'data\'\fR events
+will be emitted on the request\.
+.
+.SS "Event: \'close\'"
+\fBfunction (err) { }\fR
+.
+.P
+Indicates that the underlaying connection was terminated before \fBresponse\.end()\fR was called or able to flush\.
+.
+.P
+The \fBerr\fR parameter is always present and indicates the reason for the timeout:
+.
+.P
+\fBerr\.code === \'timeout\'\fR indicates that the underlaying connection timed out\.
+This may happen because all incoming connections have a default timeout of 2
+minutes\.
+.
+.P
+\fBerr\.code === \'aborted\'\fR means that the client has closed the underlaying
+connection prematurely\.
+.
+.P
+Just like \fB\'end\'\fR, this event occurs only once per request, and no more \fB\'data\'\fR
+events will fire afterwards\.
+.
+.P
+Note: \fB\'close\'\fR can fire after \fB\'end\'\fR, but not vice versa\.
+.
+.SS "request\.method"
+The request method as a string\. Read only\. Example: \fB\'GET\'\fR, \fB\'DELETE\'\fR\|\.
+.
+.SS "request\.url"
+Request URL string\. This contains only the URL that is
+present in the actual HTTP request\. If the request is:
+.
+.IP "" 4
+.
+.nf
+GET /status?name=ryan HTTP/1\.1\\r\\n
+Accept: text/plain\\r\\n
+\\r\\n
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Then \fBrequest\.url\fR will be:
+.
+.IP "" 4
+.
+.nf
+\'/status?name=ryan\'
+.
+.fi
+.
+.IP "" 0
+.
+.P
+If you would like to parse the URL into its parts, you can use \fBrequire(\'url\')\.parse(request\.url)\fR\|\.  Example:
+.
+.IP "" 4
+.
+.nf
+node> require(\'url\')\.parse(\'/status?name=ryan\')
+{ href: \'/status?name=ryan\',
+  search: \'?name=ryan\',
+  query: \'name=ryan\',
+  pathname: \'/status\' }
+.
+.fi
+.
+.IP "" 0
+.
+.P
+If you would like to extract the params from the query string,
+you can use the \fBrequire(\'querystring\')\.parse\fR function, or pass \fBtrue\fR as the second argument to \fBrequire(\'url\')\.parse\fR\|\.  Example:
+.
+.IP "" 4
+.
+.nf
+node> require(\'url\')\.parse(\'/status?name=ryan\', true)
+{ href: \'/status?name=ryan\',
+  search: \'?name=ryan\',
+  query: { name: \'ryan\' },
+  pathname: \'/status\' }
+.
+.fi
+.
+.IP "" 0
+.
+.SS "request\.headers"
+Read only\.
+.
+.SS "request\.trailers"
+Read only; HTTP trailers (if present)\. Only populated after the \'end\' event\.
+.
+.SS "request\.httpVersion"
+The HTTP protocol version as a string\. Read only\. Examples: \fB\'1\.1\'\fR, \fB\'1\.0\'\fR\|\.
+Also \fBrequest\.httpVersionMajor\fR is the first integer and \fBrequest\.httpVersionMinor\fR is the second\.
+.
+.SS "request\.setEncoding(encoding=null)"
+Set the encoding for the request body\. Either \fB\'utf8\'\fR or \fB\'binary\'\fR\|\. Defaults
+to \fBnull\fR, which means that the \fB\'data\'\fR event will emit a \fBBuffer\fR object\.\.
+.
+.SS "request\.pause()"
+Pauses request from emitting events\.  Useful to throttle back an upload\.
+.
+.SS "request\.resume()"
+Resumes a paused request\.
+.
+.SS "request\.connection"
+The \fBnet\.Socket\fR object associated with the connection\.
+.
+.P
+With HTTPS support, use request\.connection\.verifyPeer() and
+request\.connection\.getPeerCertificate() to obtain the client\'s
+authentication details\.
+.
+.SH "http\.ServerResponse"
+This object is created internally by a HTTP server\-\-not by the user\. It is
+passed as the second parameter to the \fB\'request\'\fR event\. It is a \fBWritable Stream\fR\|\.
+.
+.SS "response\.writeContinue()"
+Sends a HTTP/1\.1 100 Continue message to the client, indicating that
+the request body should be sent\. See the \fIcheckContinue\fR event on \fBServer\fR\|\.
+.
+.SS "response\.writeHead(statusCode, [reasonPhrase], [headers])"
+Sends a response header to the request\. The status code is a 3\-digit HTTP
+status code, like \fB404\fR\|\. The last argument, \fBheaders\fR, are the response headers\.
+Optionally one can give a human\-readable \fBreasonPhrase\fR as the second
+argument\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var body = \'hello world\';
+response\.writeHead(200, {
+  \'Content\-Length\': body\.length,
+  \'Content\-Type\': \'text/plain\' });
+.
+.fi
+.
+.IP "" 0
+.
+.P
+This method must only be called once on a message and it must
+be called before \fBresponse\.end()\fR is called\.
+.
+.P
+If you call \fBresponse\.write()\fR or \fBresponse\.end()\fR before calling this, the
+implicit/mutable headers will be calculated and call this function for you\.
+.
+.P
+Note: that Content\-Length is given in bytes not characters\. The above example
+works because the string \fB\'hello world\'\fR contains only single byte characters\.
+If the body contains higher coded characters then \fBBuffer\.byteLength()\fR
+should be used to determine the number of bytes in a given encoding\.
+And Node does not check whether Content\-Length and the length of the body
+which has been transmitted are equal or not\.
+.
+.SS "response\.statusCode"
+When using implicit headers (not calling \fBresponse\.writeHead()\fR explicitly), this property
+controls the status code that will be send to the client when the headers get
+flushed\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+response\.statusCode = 404;
+.
+.fi
+.
+.IP "" 0
+.
+.P
+After response header was sent to the client, this property indicates the
+status code which was sent out\.
+.
+.SS "response\.setHeader(name, value)"
+Sets a single header value for implicit headers\.  If this header already exists
+in the to\-be\-sent headers, it\'s value will be replaced\.  Use an array of strings
+here if you need to send multiple headers with the same name\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+response\.setHeader("Content\-Type", "text/html");
+.
+.fi
+.
+.IP "" 0
+.
+.P
+or
+.
+.IP "" 4
+.
+.nf
+response\.setHeader("Set\-Cookie", ["type=ninja", "language=javascript"]);
+.
+.fi
+.
+.IP "" 0
+.
+.SS "response\.getHeader(name)"
+Reads out a header that\'s already been queued but not sent to the client\.  Note
+that the name is case insensitive\.  This can only be called before headers get
+implicitly flushed\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var contentType = response\.getHeader(\'content\-type\');
+.
+.fi
+.
+.IP "" 0
+.
+.SS "response\.removeHeader(name)"
+Removes a header that\'s queued for implicit sending\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+response\.removeHeader("Content\-Encoding");
+.
+.fi
+.
+.IP "" 0
+.
+.SS "response\.write(chunk, encoding=\'utf8\')"
+If this method is called and \fBresponse\.writeHead()\fR has not been called, it will
+switch to implicit header mode and flush the implicit headers\.
+.
+.P
+This sends a chunk of the response body\. This method may
+be called multiple times to provide successive parts of the body\.
+.
+.P
+\fBchunk\fR can be a string or a buffer\. If \fBchunk\fR is a string,
+the second parameter specifies how to encode it into a byte stream\.
+By default the \fBencoding\fR is \fB\'utf8\'\fR\|\.
+.
+.P
+\fBNote\fR: This is the raw HTTP body and has nothing to do with
+higher\-level multi\-part body encodings that may be used\.
+.
+.P
+The first time \fBresponse\.write()\fR is called, it will send the buffered
+header information and the first body to the client\. The second time \fBresponse\.write()\fR is called, Node assumes you\'re going to be streaming
+data, and sends that separately\. That is, the response is buffered up to the
+first chunk of body\.
+.
+.SS "response\.addTrailers(headers)"
+This method adds HTTP trailing headers (a header but at the end of the
+message) to the response\.
+.
+.P
+Trailers will \fBonly\fR be emitted if chunked encoding is used for the
+response; if it is not (e\.g\., if the request was HTTP/1\.0), they will
+be silently discarded\.
+.
+.P
+Note that HTTP requires the \fBTrailer\fR header to be sent if you intend to
+emit trailers, with a list of the header fields in its value\. E\.g\.,
+.
+.IP "" 4
+.
+.nf
+response\.writeHead(200, { \'Content\-Type\': \'text/plain\',
+                          \'Trailer\': \'TraceInfo\' });
+response\.write(fileData);
+response\.addTrailers({\'Content\-MD5\': "7895bf4b8828b55ceaf47747b4bca667"});
+response\.end();
+.
+.fi
+.
+.IP "" 0
+.
+.SS "response\.end([data], [encoding])"
+This method signals to the server that all of the response headers and body
+has been sent; that server should consider this message complete\.
+The method, \fBresponse\.end()\fR, MUST be called on each
+response\.
+.
+.P
+If \fBdata\fR is specified, it is equivalent to calling \fBresponse\.write(data, encoding)\fR
+followed by \fBresponse\.end()\fR\|\.
+.
+.SH "http\.request(options, callback)"
+Node maintains several connections per server to make HTTP requests\.
+This function allows one to transparently issue requests\.
+.
+.P
+Options:
+.
+.IP "\(bu" 4
+\fBhost\fR: A domain name or IP address of the server to issue the request to\.
+.
+.IP "\(bu" 4
+\fBport\fR: Port of remote server\.
+.
+.IP "\(bu" 4
+\fBsocketPath\fR: Unix Domain Socket (use one of host:port or socketPath)
+.
+.IP "\(bu" 4
+\fBmethod\fR: A string specifying the HTTP request method\. Possible values: \fB\'GET\'\fR (default), \fB\'POST\'\fR, \fB\'PUT\'\fR, and \fB\'DELETE\'\fR\|\.
+.
+.IP "\(bu" 4
+\fBpath\fR: Request path\. Should include query string and fragments if any\.
+E\.G\. \fB\'/index\.html?page=12\'\fR
+.
+.IP "\(bu" 4
+\fBheaders\fR: An object containing request headers\.
+.
+.IP "\(bu" 4
+\fBagent\fR\fBAgent\fR
+.
+.IP "\(bu" 4
+\fBundefined\fR (default): use default \fBAgent\fR for this host and port\.
+.
+.IP "\(bu" 4
+\fBAgent\fR object: explicitly use the passed in \fBAgent\fR\|\.
+.
+.IP "\(bu" 4
+\fBfalse\fR: opts out of connection pooling with an Agent, defaults request to Connection:close\.
+.
+.IP "" 0
+
+.
+.IP "" 0
+.
+.P
+\fBhttp\.request()\fR returns an instance of the \fBhttp\.ClientRequest\fR
+class\. The \fBClientRequest\fR instance is a writable stream\. If one needs to
+upload a file with a POST request, then write to the \fBClientRequest\fR object\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var options = {
+  host: \'www\.google\.com\',
+  port: 80,
+  path: \'/upload\',
+  method: \'POST\'
+};
+var req = http\.request(options, function(res) {
+  console\.log(\'STATUS: \' + res\.statusCode);
+  console\.log(\'HEADERS: \' + JSON\.stringify(res\.headers));
+  res\.setEncoding(\'utf8\');
+  res\.on(\'data\', function (chunk) {
+    console\.log(\'BODY: \' + chunk);
+  });
+});
+req\.on(\'error\', function(e) {
+  console\.log(\'problem with request: \' + e\.message);
+});
+// write data to request body
+req\.write(\'data\\n\');
+req\.write(\'data\\n\');
+req\.end();
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Note that in the example \fBreq\.end()\fR was called\. With \fBhttp\.request()\fR one
+must always call \fBreq\.end()\fR to signify that you\'re done with the request \-
+even if there is no data being written to the request body\.
+.
+.P
+If any error is encountered during the request (be that with DNS resolution,
+TCP level errors, or actual HTTP parse errors) an \fB\'error\'\fR event is emitted
+on the returned request object\.
+.
+.P
+There are a few special headers that should be noted\.
+.
+.IP "\(bu" 4
+Sending a \'Connection: keep\-alive\' will notify Node that the connection to
+the server should be persisted until the next request\.
+.
+.IP "\(bu" 4
+Sending a \'Content\-length\' header will disable the default chunked encoding\.
+.
+.IP "\(bu" 4
+Sending an \'Expect\' header will immediately send the request headers\.
+Usually, when sending \'Expect: 100\-continue\', you should both set a timeout
+and listen for the \fBcontinue\fR event\. See RFC2616 Section 8\.2\.3 for more
+information\.
+.
+.IP "" 0
+.
+.SH "http\.get(options, callback)"
+Since most requests are GET requests without bodies, Node provides this
+convenience method\. The only difference between this method and \fBhttp\.request()\fR is
+that it sets the method to GET and calls \fBreq\.end()\fR automatically\.
+.
+.P
+Example:
+.
+.IP "" 4
+.
+.nf
+var options = {
+  host: \'www\.google\.com\',
+  port: 80,
+  path: \'/index\.html\'
+};
+http\.get(options, function(res) {
+  console\.log("Got response: " + res\.statusCode);
+})\.on(\'error\', function(e) {
+  console\.log("Got error: " + e\.message);
+});
+.
+.fi
+.
+.IP "" 0
+.
+.SH "http\.Agent"
+.
+.SH "http\.globalAgent"
+Global instance of Agent which is used as the default for all http client requests\.
+.
+.SS "agent\.maxSockets"
+By default set to 5\. Determines how many concurrent sockets the agent can have open per host\.
+.
+.SS "agent\.sockets"
+An object which contains arrays of sockets currently in use by the Agent\. Do not modify\.
+.
+.SS "agent\.requests"
+An object which contains queues of requests that have not yet been assigned to sockets\. Do not modify\.
+.
+.SH "http\.ClientRequest"
+This object is created internally and returned from \fBhttp\.request()\fR\|\.  It
+represents an \fIin\-progress\fR request whose header has already been queued\.  The
+header is still mutable using the \fBsetHeader(name, value)\fR, \fBgetHeader(name)\fR, \fBremoveHeader(name)\fR API\.  The actual header will be sent along with the first
+data chunk or when closing the connection\.
+.
+.P
+To get the response, add a listener for \fB\'response\'\fR to the request object\. \fB\'response\'\fR will be emitted from the request object when the response
+headers have been received\.  The \fB\'response\'\fR event is executed with one
+argument which is an instance of \fBhttp\.ClientResponse\fR\|\.
+.
+.P
+During the \fB\'response\'\fR event, one can add listeners to the
+response object; particularly to listen for the \fB\'data\'\fR event\. Note that
+the \fB\'response\'\fR event is called before any part of the response body is received,
+so there is no need to worry about racing to catch the first part of the
+body\. As long as a listener for \fB\'data\'\fR is added during the \fB\'response\'\fR
+event, the entire body will be caught\.
+.
+.IP "" 4
+.
+.nf
+// Good
+request\.on(\'response\', function (response) {
+  response\.on(\'data\', function (chunk) {
+    console\.log(\'BODY: \' + chunk);
+  });
+});
+// Bad \- misses all or part of the body
+request\.on(\'response\', function (response) {
+  setTimeout(function () {
+    response\.on(\'data\', function (chunk) {
+      console\.log(\'BODY: \' + chunk);
+    });
+  }, 10);
+});
+.
+.fi
+.
+.IP "" 0
+.
+.P
+This is a \fBWritable Stream\fR\|\.
+Note: Node does not check whether Content\-Length and the length of the body
+which has been transmitted are equal or not\.
+.
+.P
+This is an \fBEventEmitter\fR with the following events:
+.
+.SS "Event \'response\'"
+\fBfunction (response) { }\fR
+.
+.P
+Emitted when a response is received to this request\. This event is emitted only once\. The \fBresponse\fR argument will be an instance of \fBhttp\.ClientResponse\fR\|\.
+.
+.P
+Options:
+.
+.IP "\(bu" 4
+\fBhost\fR: A domain name or IP address of the server to issue the request to\.
+.
+.IP "\(bu" 4
+\fBport\fR: Port of remote server\.
+.
+.IP "\(bu" 4
+\fBsocketPath\fR: Unix Domain Socket (use one of host:port or socketPath)
+.
+.IP "" 0
+.
+.SS "Event: \'socket\'"
+\fBfunction (socket) { }\fR
+.
+.P
+Emitted after a socket is assigned to this request\.
+.
+.SS "Event: \'upgrade\'"
+\fBfunction (response, socket, head) { }\fR
+.
+.P
+Emitted each time a server responds to a request with an upgrade\. If this
+event isn\'t being listened for, clients receiving an upgrade header will have
+their connections closed\.
+.
+.P
+A client server pair that show you how to listen for the \fBupgrade\fR event using \fBhttp\.getAgent\fR:
+.
+.IP "" 4
+.
+.nf
+var http = require(\'http\');
+var net = require(\'net\');
+// Create an HTTP server
+var srv = http\.createServer(function (req, res) {
+  res\.writeHead(200, {\'Content\-Type\': \'text/plain\'});
+  res\.end(\'okay\');
+});
+srv\.on(\'upgrade\', function(req, socket, upgradeHead) {
+  socket\.write(\'HTTP/1\.1 101 Web Socket Protocol Handshake\\r\\n\' +
+               \'Upgrade: WebSocket\\r\\n\' +
+               \'Connection: Upgrade\\r\\n\' +
+               \'\\r\\n\\r\\n\');
+  socket\.ondata = function(data, start, end) {
+    socket\.write(data\.toString(\'utf8\', start, end), \'utf8\'); // echo back
+  };
+});
+// now that server is running
+srv\.listen(1337, \'127\.0\.0\.1\', function() {
+  // make a request
+  var options = {
+    port: 1337,
+    host: \'127\.0\.0\.1\',
+    headers: {
+      \'Connection\': \'Upgrade\',
+      \'Upgrade\': \'websocket\'
+    }
+  };
+  var req = http\.request(options);
+  req\.end();
+  req\.on(\'upgrade\', function(res, socket, upgradeHead) {
+    console\.log(\'got upgraded!\');
+    socket\.end();
+    process\.exit(0);
+  });
+});
+.
+.fi
+.
+.IP "" 0
+.
+.SS "Event: \'continue\'"
+\fBfunction ()\fR
+.
+.P
+Emitted when the server sends a \'100 Continue\' HTTP response, usually because
+the request contained \'Expect: 100\-continue\'\. This is an instruction that
+the client should send the request body\.
+.
+.SS "request\.write(chunk, encoding=\'utf8\')"
+Sends a chunk of the body\.  By calling this method
+many times, the user can stream a request body to a
+server\-\-in that case it is suggested to use the \fB[\'Transfer\-Encoding\', \'chunked\']\fR header line when
+creating the request\.
+.
+.P
+The \fBchunk\fR argument should be an array of integers
+or a string\.
+.
+.P
+The \fBencoding\fR argument is optional and only
+applies when \fBchunk\fR is a string\.
+.
+.SS "request\.end([data], [encoding])"
+Finishes sending the request\. If any parts of the body are
+unsent, it will flush them to the stream\. If the request is
+chunked, this will send the terminating \fB\'0\\r\\n\\r\\n\'\fR\|\.
+.
+.P
+If \fBdata\fR is specified, it is equivalent to calling \fBrequest\.write(data, encoding)\fR
+followed by \fBrequest\.end()\fR\|\.
+.
+.SS "request\.abort()"
+Aborts a request\.  (New since v0\.3\.8\.)
+.
+.SH "http\.ClientResponse"
+This object is created when making a request with \fBhttp\.request()\fR\|\. It is
+passed to the \fB\'response\'\fR event of the request object\.
+.
+.P
+The response implements the \fBReadable Stream\fR interface\.
+.
+.SS "Event: \'data\'"
+\fBfunction (chunk) { }\fR
+.
+.P
+Emitted when a piece of the message body is received\.
+.
+.SS "Event: \'end\'"
+\fBfunction () { }\fR
+.
+.P
+Emitted exactly once for each message\. No arguments\. After
+emitted no other events will be emitted on the response\.
+.
+.SS "Event: \'close\'"
+\fBfunction (err) { }\fR
+.
+.P
+Indicates that the underlaying connection was terminated before \fBend\fR event was emitted\.
+See \fIhttp\.ServerRequest\fR\'s \fB\'close\'\fR event for more
+information\.
+.
+.SS "response\.statusCode"
+The 3\-digit HTTP response status code\. E\.G\. \fB404\fR\|\.
+.
+.SS "response\.httpVersion"
+The HTTP version of the connected\-to server\. Probably either \fB\'1\.1\'\fR or \fB\'1\.0\'\fR\|\.
+Also \fBresponse\.httpVersionMajor\fR is the first integer and \fBresponse\.httpVersionMinor\fR is the second\.
+.
+.SS "response\.headers"
+The response headers object\.
+.
+.SS "response\.trailers"
+The response trailers object\. Only populated after the \'end\' event\.
+.
+.SS "response\.setEncoding(encoding=null)"
+Set the encoding for the response body\. Either \fB\'utf8\'\fR, \fB\'ascii\'\fR, or \fB\'base64\'\fR\|\.
+Defaults to \fBnull\fR, which means that the \fB\'data\'\fR event will emit a \fBBuffer\fR object\.\.
+.
+.SS "response\.pause()"
+Pauses response from emitting events\.  Useful to throttle back a download\.
+.
+.SS "response\.resume()"
+Resumes a paused response\.

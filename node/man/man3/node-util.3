@@ -1,0 +1,170 @@
+.\" Generated with Ronnjs/v0.1
+.\" http://github.com/kapouer/ronnjs/
+.
+.TH "NODE\-UTIL" "3" "October 2011" "" ""
+.
+.SH "NAME"
+\fBnode-util\fR \-\- http://nodejs\.org/docs/v0\.4\.8/api/util\.html
+.
+.SH "util"
+These functions are in the module \fB\'util\'\fR\|\. Use \fBrequire(\'util\')\fR to access
+them\.
+.
+.SS "util\.format()"
+Returns a formatted string using the first argument as a \fBprintf\fR\-like format\.
+.
+.P
+The first argument is a string that contains zero or more \fIplaceholders\fR\|\.
+Each placeholder is replaced with the converted value from its corresponding
+argument\. Supported placeholders are:
+.
+.IP "\(bu" 4
+\fB%s\fR \- String\.
+.
+.IP "\(bu" 4
+\fB%d\fR \- Number (both integer and float)\.
+.
+.IP "\(bu" 4
+\fB%j\fR \- JSON\.
+.
+.IP "\(bu" 4
+\fB%%\fR \- single percent sign (\fB\'%\'\fR)\. This does not consume an argument\.
+.
+.IP "" 0
+.
+.P
+If the placeholder does not have a corresponding argument, the placeholder is
+not replaced\.
+.
+.IP "" 4
+.
+.nf
+util\.format(\'%s:%s\', \'foo\'); // \'foo:%s\'
+.
+.fi
+.
+.IP "" 0
+.
+.P
+If there are more arguments than placeholders, the extra arguments are
+converted to strings with \fButil\.inspect()\fR and these strings are concatenated,
+delimited by a space\.
+.
+.IP "" 4
+.
+.nf
+util\.format(\'%s:%s\', \'foo\', \'bar\', \'baz\'); // \'foo:bar baz\'
+.
+.fi
+.
+.IP "" 0
+.
+.P
+If the first argument is not a format string then \fButil\.format()\fR returns
+a string that is the concatenation of all its arguments separated by spaces\.
+Each argument is converted to a string with \fButil\.inspect()\fR\|\.
+.
+.IP "" 4
+.
+.nf
+util\.format(1, 2, 3); // \'1 2 3\'
+.
+.fi
+.
+.IP "" 0
+.
+.SS "util\.debug(string)"
+A synchronous output function\. Will block the process and
+output \fBstring\fR immediately to \fBstderr\fR\|\.
+.
+.IP "" 4
+.
+.nf
+require(\'util\')\.debug(\'message on stderr\');
+.
+.fi
+.
+.IP "" 0
+.
+.SS "util\.log(string)"
+Output with timestamp on \fBstdout\fR\|\.
+.
+.IP "" 4
+.
+.nf
+require(\'util\')\.log(\'Timestamped message\.\');
+.
+.fi
+.
+.IP "" 0
+.
+.SS "util\.inspect(object, showHidden=false, depth=2)"
+Return a string representation of \fBobject\fR, which is useful for debugging\.
+.
+.P
+If \fBshowHidden\fR is \fBtrue\fR, then the object\'s non\-enumerable properties will be
+shown too\.
+.
+.P
+If \fBdepth\fR is provided, it tells \fBinspect\fR how many times to recurse while
+formatting the object\. This is useful for inspecting large complicated objects\.
+.
+.P
+The default is to only recurse twice\.  To make it recurse indefinitely, pass
+in \fBnull\fR for \fBdepth\fR\|\.
+.
+.P
+Example of inspecting all properties of the \fButil\fR object:
+.
+.IP "" 4
+.
+.nf
+var util = require(\'util\');
+console\.log(util\.inspect(util, true, null));
+.
+.fi
+.
+.IP "" 0
+.
+.SS "util\.pump(readableStream, writableStream, [callback])"
+Experimental
+.
+.P
+Read the data from \fBreadableStream\fR and send it to the \fBwritableStream\fR\|\.
+When \fBwritableStream\.write(data)\fR returns \fBfalse\fR \fBreadableStream\fR will be
+paused until the \fBdrain\fR event occurs on the \fBwritableStream\fR\|\. \fBcallback\fR gets
+an error as its only argument and is called when \fBwritableStream\fR is closed or
+when an error occurs\.
+.
+.SS "util\.inherits(constructor, superConstructor)"
+Inherit the prototype methods from one constructor \fIhttps://developer\.mozilla\.org/en/JavaScript/Reference/Global_Objects/Object/constructor\fR
+into another\.  The prototype of \fBconstructor\fR will be set to a new
+object created from \fBsuperConstructor\fR\|\.
+.
+.P
+As an additional convenience, \fBsuperConstructor\fR will be accessible
+through the \fBconstructor\.super_\fR property\.
+.
+.IP "" 4
+.
+.nf
+var util = require("util");
+var events = require("events");
+function MyStream() {
+    events\.EventEmitter\.call(this);
+}
+util\.inherits(MyStream, events\.EventEmitter);
+MyStream\.prototype\.write = function(data) {
+    this\.emit("data", data);
+}
+var stream = new MyStream();
+console\.log(stream instanceof events\.EventEmitter); // true
+console\.log(MyStream\.super_ === events\.EventEmitter); // true
+stream\.on("data", function(data) {
+    console\.log(\'Received data: "\' + data + \'"\');
+})
+stream\.write("It works!"); // Received data: "It works!"
+.
+.fi
+.
+.IP "" 0

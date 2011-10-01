@@ -1,0 +1,174 @@
+.\" Generated with Ronnjs/v0.1
+.\" http://github.com/kapouer/ronnjs/
+.
+.TH "NODE\-READLINE" "3" "October 2011" "" ""
+.
+.SH "NAME"
+\fBnode-readline\fR \-\- http://nodejs\.org/docs/v0\.4\.8/api/readline\.html
+.
+.SH "Readline"
+To use this module, do \fBrequire(\'readline\')\fR\|\. Readline allows reading of a
+stream (such as STDIN) on a line\-by\-line basis\.
+.
+.P
+Note that once you\'ve invoked this module, your node program will not
+terminate until you\'ve closed the interface, and the STDIN stream\. Here\'s how
+to allow your program to gracefully terminate:
+.
+.IP "" 4
+.
+.nf
+var rl = require(\'readline\');
+var i = rl\.createInterface(process\.sdtin, process\.stdout, null);
+i\.question("What do you think of node\.js?", function(answer) {
+  // TODO: Log the answer in a database
+  console\.log("Thank you for your valuable feedback\.");
+  // These two lines together allow the program to terminate\. Without
+  // them, it would run forever\.
+  i\.close();
+  process\.stdin\.destroy();
+});
+.
+.fi
+.
+.IP "" 0
+.
+.SS "rl\.createInterface(input, output, completer)"
+Takes two streams and creates a readline interface\. The \fBcompleter\fR function
+is used for autocompletion\. When given a substring, it returns \fB[[substr1,
+substr2, \.\.\.], originalsubstring]\fR\|\.
+.
+.P
+\fBcreateInterface\fR is commonly used with \fBprocess\.stdin\fR and \fBprocess\.stdout\fR in order to accept user input:
+.
+.IP "" 4
+.
+.nf
+var readline = require(\'readline\'),
+  rl = readline\.createInterface(process\.stdin, process\.stdout);
+.
+.fi
+.
+.IP "" 0
+.
+.SS "rl\.setPrompt(prompt, length)"
+Sets the prompt, for example when you run \fBnode\fR on the command line, you see \fB> \fR, which is node\'s prompt\.
+.
+.SS "rl\.prompt()"
+Readies readline for input from the user, putting the current \fBsetPrompt\fR
+options on a new line, giving the user a new spot to write\.
+.
+.P
+<!\-\- ### rl\.getColumns() Not available? \-\->
+.
+.SS "rl\.question(query, callback)"
+Prepends the prompt with \fBquery\fR and invokes \fBcallback\fR with the user\'s
+response\. Displays the query to the user, and then invokes \fBcallback\fR with the
+user\'s response after it has been typed\.
+.
+.P
+Example usage:
+.
+.IP "" 4
+.
+.nf
+interface\.question(\'What is your favorite food?\', function(answer) {
+  console\.log(\'Oh, so your favorite food is \' + answer);
+});
+.
+.fi
+.
+.IP "" 0
+.
+.SS "rl\.close()"
+  Closes tty\.
+.
+.SS "rl\.pause()"
+  Pauses tty\.
+.
+.SS "rl\.resume()"
+  Resumes tty\.
+.
+.SS "rl\.write()"
+  Writes to tty\.
+.
+.SS "Event: \'line\'"
+\fBfunction (line) {}\fR
+.
+.P
+Emitted whenever the \fBin\fR stream receives a \fB\\n\fR, usually received when the
+user hits enter, or return\. This is a good hook to listen for user input\.
+.
+.P
+Example of listening for \fBline\fR:
+.
+.IP "" 4
+.
+.nf
+rl\.on(\'line\', function (cmd) {
+  console\.log(\'You just typed: \'+cmd);
+});
+.
+.fi
+.
+.IP "" 0
+.
+.SS "Event: \'close\'"
+\fBfunction () {}\fR
+.
+.P
+Emitted whenever the \fBin\fR stream receives a \fB^C\fR or \fB^D\fR, respectively known
+as \fBSIGINT\fR and \fBEOT\fR\|\. This is a good way to know the user is finished using
+your program\.
+.
+.P
+Example of listening for \fBclose\fR, and exiting the program afterward:
+.
+.IP "" 4
+.
+.nf
+rl\.on(\'close\', function() {
+  console\.log(\'goodbye!\');
+  process\.exit(0);
+});
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Here\'s an example of how to use all these together to craft a tiny command
+line interface:
+.
+.IP "" 4
+.
+.nf
+var readline = require(\'readline\'),
+  rl = readline\.createInterface(process\.stdin, process\.stdout),
+  prefix = \'OHAI> \';
+rl\.on(\'line\', function(line) {
+  switch(line\.trim()) {
+    case \'hello\':
+      console\.log(\'world!\');
+      break;
+    default:
+      console\.log(\'Say what? I might have heard `\' + line\.trim() + \'`\');
+      break;
+  }
+  rl\.setPrompt(prefix, prefix\.length);
+  rl\.prompt();
+})\.on(\'close\', function() {
+  console\.log(\'Have a great day!\');
+  process\.exit(0);
+});
+console\.log(prefix + \'Good to see you\. Try typing stuff\.\');
+rl\.setPrompt(prefix, prefix\.length);
+rl\.prompt();
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Take a look at this slightly more complicated example \fIhttps://gist\.github\.com/901104\fR, and http\-console \fIhttp://github\.com/cloudhead/http\-console\fR for a real\-life use
+case\.
