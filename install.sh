@@ -22,7 +22,7 @@ for i in **/*.ln; do
       echo "  x Failed on $dotfile" > /dev/stderr
       exit 1
     else
-      echo "  * \[\033[0;32m\]$dotfile stored -> ~/.dotfiles_backup/$dotfile" > /dev/stderr
+      echo "  * $dotfile stored -> ~/.dotfiles_backup/$dotfile" > /dev/stderr
     fi
   fi
   echo "» Linking $i to your home directory -> ~/$dotfile";
