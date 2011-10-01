@@ -8,6 +8,7 @@
 #     node-md http
 #
 function node-md {
+  [[ -z "$1" ]] && return 1
   url="https://raw.github.com/joyent/node/master/doc/api/$1.markdown"
   curl $url
 }
@@ -22,7 +23,10 @@ function node-md {
 #     node-docs http http.createServer
 #
 function node-docs {
-	open "http://nodejs.org/docs/$(node --version)/api/$1.html#$2"
+  local page="$1" section="$2"
+  [[ -z "$page" ]] && page="all"
+  [[ -z "$section" ]] || section="#$section"
+  open "http://nodejs.org/docs/$(node --version)/api/$page.html$section"
 }
 
 
