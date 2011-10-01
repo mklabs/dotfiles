@@ -9,8 +9,9 @@
 #
 function node-md {
   [[ -z "$1" ]] && return 1
-  url="https://raw.github.com/joyent/node/master/doc/api/$1.markdown"
-  curl $url
+  local dir="$HOME/.dotfiles/node/doc/api/$1.markdown"
+  [[ -e "$dir" ]] || return 1
+  cat $dir
 }
 
 # Open the node api for your current version to the optional section.
