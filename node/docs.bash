@@ -14,9 +14,10 @@ function node-md {
   cat $dir
 }
 
-# Open the node api for your current version to the optional section.
+# Open the node api for your current version to the optional section,
+# using the default browser.
 #
-# usage: 
+# usage:
 #     node-docs fs fs.createReadStream
 #     node-docs fs fs.createReadStream
 #     node-docs path path.exists
@@ -31,8 +32,23 @@ function node-docs {
 }
 
 
-# bash completion \o/
+# Open the node man page for the argument section.
+#
+# usage:
+#     node-man fs
+#     node-man path
+#     node-man vm
+#     node-man http
+#
+function node-man {
+  local page="$1"
+  [[ -z "$page" ]] && page="_toc"
+  man "node-$page"
+}
 
+
+
+# bash completion \o/
 _node_api_completion() {
   local cur prev opts
   COMPREPLY=()
@@ -48,4 +64,5 @@ _node_api_completion() {
 
 complete -F _node_api_completion node-md
 complete -F _node_api_completion node-docs
+complete -F _node_api_completion node-man
 
