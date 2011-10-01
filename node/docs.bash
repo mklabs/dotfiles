@@ -8,8 +8,10 @@
 #     node-md http
 #
 function node-md {
-  [[ -z "$1" ]] && return 1
-  local dir="$HOME/.dotfiles/node/doc/api/$1.markdown"
+  local page="$1" dir
+  [[ -z "$page" ]] && page="_toc"
+
+  local dir="$HOME/.dotfiles/node/doc/api/$page.markdown"
   [[ -e "$dir" ]] || return 1
   cat $dir
 }

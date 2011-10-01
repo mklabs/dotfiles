@@ -11,14 +11,14 @@ they are centered around vim, git, npm and node.
 
 > [Your dotfiles are how you personalize your system. These are mine.](https://github.com/holman/dotfiles#readme)
 
-They're mostly inspired (hence the fork) by [@holman](https://github.com/holman/dotfiles)'s way of dealing 
-with its dotfiles, and zsh configuration. The per-topics thing kinda match my tastes. Also, I didn't know 
+They're mostly inspired (hence the fork) by [@holman](https://github.com/holman/dotfiles)'s way of dealing
+with its dotfiles, and zsh configuration. The per-topics thing kinda match my tastes. Also, I didn't know
 shit about bash/zsh and dotfiles, and I wanted to setup my dotfiles from scratch (not really actually).
 
 Most of these files are coming from other dotfiles' repository too.
 
-For instance, the `install.sh` is heavily (well, it is the starting point actually) inspired by 
-[isaacs/dotfiles](https://github.com/isaacs/dotfiles ) install script. It's been slightly edited 
+For instance, the `install.sh` is heavily (well, it is the starting point actually) inspired by
+[isaacs/dotfiles](https://github.com/isaacs/dotfiles ) install script. It's been slightly edited
 to work with per-topics symlinked files (which are ending by `.ln` here)
 
 Most of these dotfiles are coming, or are directly inspired by some of
@@ -61,18 +61,6 @@ which sets up a few paths that'll be different on your particular machine.
 
 This is where the files ending with either `*.bash` or `*.zsh` are included in the shell configuration.
 
-## includes
-
-* fancy command line prompt with node/npm version + git info: `17:56 ~/.dotfiles «v0.4.12/1.0.23» (master) »` 
-  * (time in 24-hour, current working directory, node/npm version, git information)
-* npm completion
-* git completion
-* basic git configuration I enjoy using, and alias to some log and status command.
-* [defunkt/hub](https://github.com/defunkt/hub) wrapper
-* vim basic configuration ([janus](https://github.com/carlhuda/janus)' one) + pathogen and a small set of [plugins](https://github.com/mklabs/dotfiles/blob/master/.gitmodules)
-* some alias
-* .. and some other stuff, but not many :)
-
 ## components
 
 There's a few special files in the hierarchy.
@@ -87,6 +75,70 @@ There's a few special files in the hierarchy.
 - **topic/\*.completion.bash**: Any files ending in `completion.bash` get loaded
   last so that they get loaded after we set up zsh autocomplete functions.
   (bash configuration autoloads them anyway).
+
+## includes
+
+* fancy command line prompt with node/npm version + git info: `17:56 ~/.dotfiles «v0.4.12/1.0.23» (master) »`
+  * (time in 24-hour, current working directory, node/npm version, git information)
+* npm completion
+* git completion
+* basic git configuration I enjoy using, and alias to some log and status command.
+* [defunkt/hub](https://github.com/defunkt/hub) wrapper
+* vim basic configuration ([janus](https://github.com/carlhuda/janus)' one) + pathogen and a small set of [plugins](https://github.com/mklabs/dotfiles/blob/master/.gitmodules)
+* some alias
+* .. and some other stuff, but not many
+
+## node stuff
+
+A few
+[functions](https://github.com/mklabs/dotfiles/blob/mine/node/docs.bash)
+related to the [node documentation](node documentation). The repo
+includes the api markdown files in `node/doc/api`. It also includes the
+generated manpage from these, using [kapouer/ronnjs](https://github.com/kapouer/ronnjs),
+a port of [rtomayko/ronn](http://github.com/rtomayko/ronn). npm uses it to provides these
+beautiful command line documentation.
+
+* node-docs: Open the node api in the default browser for the current
+  node version to the optional section.
+* node-md: Output the markdown content (a simple cat)
+* node-man: Open the according manpage, generated from markdown content.
+
+```sh
+node-docs                         # open http://nodejs.org/docs/v0.4.8/api/all.html
+node-docs fs                      # http://nodejs.org/docs/v0.4.8/api/fs.html
+node-docs fs fs.createReadStream  # http://nodejs.org/docs/v0.4.8/api/fs.html#fs.createReadStream
+```
+
+```sh
+node-md                           # raw output https://raw.github.com/joyent/node/master/doc/api/_toc.markdown
+node-md fs                        # https://raw.github.com/joyent/node/master/doc/api/fs.markdown
+node-md path                      # https://raw.github.com/joyent/node/master/doc/api/path.markdown
+```
+
+```sh
+node-man                          # open the toc manpage
+node-man fs                       # open the fs manpage
+node-man vm                       # open the vm manpage
+```
+
+or using man directly, `node/man` is added to the MANPATH environment variable by `bash/env.bash` or `zsh/env.zsh`.
+
+```sh
+man node-http
+man node-globals
+```
+
+Note that each of these functions provides a realy basic completion support, just enough to make my life easier reading through the doc.
+
+```sh
+21:40:52  ~  «v0.4.8/1.0.27»  » node-man <tab><tab>
+_toc             appendix_2       crypto           events           https            os               readline         string_decoder   tty              zlib
+addons           assert           debugger         fs               index            path             repl             synopsis         url
+all              buffers          dgram            globals          modules          process          stdio            timers           util
+appendix_1       child_processes  dns              http             net              querystring      streams          tls              vm
+```
+
+#### node-docs
 
 ## prompts
 
@@ -138,27 +190,11 @@ color.branch.plain         color.diff.frag            color.diff.plain          
 --abbrev=     --color       --contains    --merged      --no-abbrev   --no-color    --no-merged   --no-track    --track       --verbose
 
 00:03:28  ~/.dotfiles  «v0.4.8/1.0.27»  (mine*+) » git diff --<tab>
---abbrev                --color                 --ext-diff              --ignore-space-change   --no-ext-diff           --patch-with-stat       --raw                   --summary 
---base                  --color-words           --find-copies-harder    --inter-hunk-context=   --no-prefix             --patience              --shortstat             --text 
---binary                --diff-filter=          --full-index            --name-only             --no-renames            --pickaxe-all           --src-prefix=           --theirs 
+--abbrev                --color                 --ext-diff              --ignore-space-change   --no-ext-diff           --patch-with-stat       --raw                   --summary
+--base                  --color-words           --find-copies-harder    --inter-hunk-context=   --no-prefix             --patience              --shortstat             --text
+--binary                --diff-filter=          --full-index            --name-only             --no-renames            --pickaxe-all           --src-prefix=           --theirs
 --cached                --dst-prefix=           --ignore-all-space      --name-status           --numstat               --pickaxe-regex         --staged
 --check                 --exit-code             --ignore-space-at-eol   --no-color              --ours                  --quiet                 --stat
-00:03:28  ~/.dotfiles  «v0.4.8/1.0.27»  (mine*+) » git diff <tab>
-HEAD            master          mine            origin/HEAD     origin/master
-00:03:28  ~/.dotfiles  «v0.4.8/1.0.27»  (mine*+) » git log <tab>
-HEAD            master          mine            origin/HEAD     origin/master
-00:03:28  ~/.dotfiles  «v0.4.8/1.0.27»  (mine*+) » git log --<tab>
---abbrev                   --cherry-pick              --exit-code                --ignore-space-at-eol      --no-merges                --pretty=                  --sparse 
---abbrev-commit            --children                 --ext-diff                 --ignore-space-change      --no-prefix                --quiet                    --src-prefix=
---abbrev=                  --color                    --find-copies-harder       --inter-hunk-context=      --no-renames               --raw                      --stat 
---after=                   --color-words              --first-parent             --left-right               --not                      --relative-date            --summary 
---all                      --committer=               --follow                   --max-age=                 --numstat                  --remotes                  --tags 
---all-match                --date-order               --format=                  --max-count=               --oneline                  --reverse                  --text 
---author=                  --date=                    --full-history             --min-age=                 --parents                  --root                     --topo-order 
---before=                  --decorate                 --full-index               --name-only                --patch-with-stat          --shortstat                --until=
---binary                   --dense                    --graph                    --name-status              --patience                 --simplify-by-decoration   --walk-reflogs 
---branches                 --diff-filter=             --grep=                    --no-color                 --pickaxe-all              --simplify-merges
---check                    --dst-prefix=              --ignore-all-space         --no-ext-diff              --pickaxe-regex            --since
 ```
 
 
