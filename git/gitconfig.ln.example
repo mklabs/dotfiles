@@ -1,0 +1,65 @@
+# Sample gitconfig
+#
+# This is a sample gitconfig. Usually we keep a lot of sensitive information
+# here (things like authentication tokens, email addresses, and so on), so this
+# file is ignored in this project's .gitignore.
+#
+# To set this up, rename this file to `gitconfig.ln` and you'll be able to
+# install this to the correct location by running the project's `install.sh`
+# script.
+
+
+[user]
+  email = your@example.com
+  name = Mickael Daniel
+
+[core]
+  filemode = false
+  autocrlf = false
+
+[alias]
+  ci = commit
+  st = status
+  s = status -s
+  sb = status -sb
+  br = branch
+  co = checkout
+  ll = log --graph --pretty=format:'%Cred%h%Creset %C(yellow)%an%d%Creset %s %Cgreen(%cr)%Creset' --date=relative
+  lg = log --graph --pretty=format:'%Cred%h%Creset %C(yellow)%an%d%Creset %s %Cgreen(%cr)%Creset' --date=relative
+  lo = log --oneline
+  authors = log --pretty=format:'%an <%ae>'
+  df = diff
+  dif = diff
+  di = diff
+  dd = diff
+  rr = remote -v
+
+[branch.master]
+  mergeoptions = log
+
+[color]
+  branch = auto
+  diff = auto
+  status = auto
+[color "branch"]
+  current = yellow bold
+  local = yellow
+  remote = green
+[color "diff"]
+  meta = yellow
+  frag = yellow
+  old = red
+  new = green
+[color "status"]
+  added = yellow
+  changed = green
+[diff]
+[difftool]
+  prompt = false
+[diff]
+  tool = vimdiff
+[merge]
+  tool = vimdiff
+
+[github]
+  user = mklabs
