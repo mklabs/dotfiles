@@ -1,6 +1,6 @@
 [submodule "vim/vim.ln/bundle/fugitive"]
 	path = vim/vim.ln/bundle/fugitive
-	url = http://github.com/tpope/vim-fugitive.git
+	url = git://github.com/tpope/vim-fugitive.git
 [submodule "vim/vim.ln/bundle/color-sampler-pack"]
 	path = vim/vim.ln/bundle/color-sampler-pack
 	url = git://github.com/vim-scripts/Color-Sampler-Pack.git

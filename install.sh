@@ -6,6 +6,8 @@
 # and adapted here to work on linked directory and autoload
 # per-topics `*.ln` files in this directory
 
+# submodules init/update
+git submodule init && git submodule update
 
 # backup and link all the dotfiles within topics
 ! [ -d ~/.dotfile_backup ] && mkdir ~/.dotfile_backup
