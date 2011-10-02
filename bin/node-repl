@@ -1,0 +1,114 @@
+#!/usr/bin/env node
+
+var fs = require('fs'),
+  child = require('child_process'),
+  repl = require('repl'),
+  path = require('path'),
+  vm = require('vm')
+  colors = require('colors');
+
+console.log('Starting custom yellow REPL'.yellow);
+
+console.log('\n * Type .<tab><tab> for a list of command.'.grey);
+console.log(' * Type .mvim to open a new buffer in mvim.'.grey);
+console.log(' * Type .mate to open a new textmate window.'.grey);
+
+console.log('\nSave and quit to execute the file. `exports` object gets loaded in repl context.'.yellow);
+
+var nv = process.version.replace(/^v/, ''),
+  replprefix = [nv].join('/') + ' >> ';
+
+// function that gets called when hitting `.vim`, '.mvim', '.mate' etc.
+var editor = function editor(ed) {
+  ed = ed.split(' ');
+  // args here is the raw string after the `.cmd`
+  return function(args) {
+    var fds = [process.openStdin(), process.stdout, process.stdout];
+
+    // create the temporary file
+    var file = path.join(__dirname, '..', '.repl.swp.js');
+
+    // will flush out previous tmp version, only if we're told to "clean"
+    if(args === 'clean' || args === 'c') fs.createWriteStream(file)
+        .on('error', function(error) { console.log(error); process.exit(1); });
+
+    var editor = child.spawn(ed[0], ed.slice(1).concat(file), {customFds: fds});
+    editor.on('exit', function(code) {
+      var read = fs.createReadStream(file),
+        context = vm.createContext(local.context),
+        stdout = [];
+
+      context.exports = context.exports || {};
+
+      read.on('data', function(d) { stdout.push(d); });
+      read.on('end', function() {
+        try {
+          vm.runInContext(stdout.join(''), context, "repl");
+          // extend the repl context with the exposed stuff in editor
+          Object.keys(context.exports).forEach(function(key) {
+            local.context[key] = context.exports[key];
+          });
+        } catch (e) {
+          // On error: Print the error and clear the buffer
+          if (e.stack) {
+            console.error(e.stack.red + "\n");
+          } else {
+            console.log(e.toString().red + "\n");
+          }
+        }
+
+        console.log(('Editor exited with code ' + code + '. Script executed.')[code ? 'red' : 'green']);
+      });
+    });
+
+  };
+};
+
+
+// Starts a repl, before that will require any command line arguments if any
+// and provides the exported module as repl context.
+//
+
+console.log('\n ✓ Repl started and ready >> Go for it.'.green + "\n");
+var local = repl.start(replprefix);
+local.context.oarrrr = 'set a oarrrr of pirates';
+local.defineCommand('hellonurse', {
+  help: 'Sometimes you want a nurse, so youll say hello nurse.',
+  action: function() {
+    console.log('Hello world thiing');
+  }
+});
+
+// on 0.4.8 get an early exit event with mvim, worked well
+// until was added the support for mate. mate works well.
+//
+// Child process exists while opening the file. 
+// Works as expected on 0.5.8
+local.defineCommand('mvim', {
+  help: 'Opens up a new mvim buffer',
+  action: editor('mvim')
+});
+
+/* * /
+// vim and other cli text-editor needs some more work, pause/resume repl
+local.defineCommand('vim', {
+  help: 'Opens up a new vim buffer',
+  action: editor('mvim')
+});
+/* */
+
+local.defineCommand('mate', {
+  help: 'Opens up a new textmate window',
+  action: editor('mate -w')
+});
+
+// augment repl context
+process.argv.slice(2).forEach(function(module) {
+  console.log(('Load module ' + module).yellow, path.resolve(module));
+
+  var m = module.replace(/\..+$/, ''),
+    mod = require(path.resolve(module));
+
+  console.log(('Register module ' + m + ' in repl context').yellow, mod);
+  local.context[m] = mod;
+});

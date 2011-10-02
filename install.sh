@@ -12,7 +12,7 @@ git submodule init && git submodule update
 # install a few npm packages, may ends up in a package.json + start script
 # installing ronn for the manpage stuff (`npm-readme`), npm/colors mainly for
 # the custom vim/mate repl.
-echo ' » installing ronn for the manpage npm-readme stuff, npm/colors mainly for the custom vim/mate repl \n\n'
+echo " » installing ronn for the manpage npm-readme stuff, npm/colors mainly for the custom vim/mate repl"
 ! [ -d ~/.dotfiles/node_modules ] && npm install npm colors ronn
 
 # backup and link all the dotfiles within topics
