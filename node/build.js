@@ -46,6 +46,16 @@ var front = [
 ].join('\n');
 
 
+if(src) {
+  src = path.resolve(src);
+  if(path.existsSync(src)) {
+    console.log(ronnify(src));
+  }
+
+  return;
+}
+
+
 fs.readdirSync(apidir).forEach(function(src) {
   var file = path.join(apidir, src);
   if(!fs.statSync(file).isFile()) return;
