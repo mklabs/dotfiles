@@ -94,6 +94,8 @@ beautiful command line documentation.
   node version to the optional section.
 * node-md: Output the markdown content (a simple cat)
 * node-man: Open the according manpage, generated from markdown content.
+* node-src: Open the source (js) file on github, using current version,
+  jumping to the optionnal line argument.
 
 ```sh
 node-docs                         # open http://nodejs.org/docs/v0.4.8/api/all.html
@@ -118,6 +120,29 @@ or using man directly, `node/man` is added to the MANPATH environment variable b
 ```sh
 man node-http
 man node-globals
+```
+
+The `node-src` command opens the source file on github for the argument node module and
+the current node version. Optionnal line args let you jump directly to the line number.
+
+This is really usefull when you get some stack trace, and whould like to see the corresponding code.
+
+use case: got an error
+
+```sh
+AssertionError: stdin must be initialized before calling setRawMode
+  at Object.setRawMode (tty_uv.js:37:10)
+  at new Interface (readline.js:89:9)
+  at Object.createInterface (readline.js:38:10)
+  ... etc
+``
+
+Jump to the code:
+
+```sh
+node-src tty_uv 37
+node-src readline 89
+node-src readlline 38
 ```
 
 Note that each of these functions provides a realy basic completion support, just enough to make my life easier reading through the doc.

@@ -1,3 +1,13 @@
+# node/docs.bash
+
+#
+# Collection of bash functions related to the node documentation,
+# provides a few handy way to jump right away to the part of node
+# api. Man pages are probably the best way to quickly jump to
+# what you need, all in our beloved cli ♥
+#
+
+
 # Open the node api on HEAD to the arguments section,
 # and bump markdown output to the console
 #
@@ -48,6 +58,29 @@ function node-man {
   man "node-$page"
 }
 
+# Opens the source file on github for the argument node module and
+# the current node version. Optionnal line args let you jump directly
+# to the line number. This is really usefull when you get some stack trace,
+# and whould like to see the corresponding code.
+#
+# use case: got an error
+#     AssertionError: stdin must be initialized before calling setRawMode
+#       at Object.setRawMode (tty_uv.js:37:10)
+#       at new Interface (readline.js:89:9)
+#       at Object.createInterface (readline.js:38:10)
+#       ... etc
+#
+# Jump to the code:
+#     node-src tty_uv 37
+#     node-src readline 89
+#     node-src readlline 38
+#
+function node-src {
+  local page="lib/$1" line="L$2"
+  [[ "$page" == "lib/" ]] && page="src/node"
+  [[ "$line" == "L" ]] && line="L1"
+  open "https://github.com/joyent/node/blob/$(node --version)/$page.js#$line"
+}
 
 
 # bash completion \o/
@@ -67,4 +100,5 @@ _node_api_completion() {
 complete -F _node_api_completion node-md
 complete -F _node_api_completion node-docs
 complete -F _node_api_completion node-man
+complete -F _node_api_completion node-src
 
