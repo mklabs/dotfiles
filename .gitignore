@@ -1,4 +1,10 @@
+# ignore both git/npm config
 npm/npmrc.ln
 git/gitconfig.ln
+
+# vim stuff
 vim/vim.ln/.netrwhist
 vim/vim.ln/backup
+
+# npm man tmp file used in npm-readme
+npm/.man.swp
