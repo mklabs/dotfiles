@@ -5,7 +5,7 @@ includes both bash/zsh configuration, with similar defaults configuration.
 these dotfiles are meant to be used in mac (mainly for the macvim stuff), although most of it will work in other
 unix too.
 
-they are centered around vim, git, npm and node.
+they are centered around vim, git, npm and node (and man pages..)
 
 ## intro
 
@@ -38,17 +38,9 @@ there)
 
 ```sh
 # assuming you have hub installed!
-git clone mklabs/dotfiles ~/.dotfiles
+git clone git://github.com/mklabs/dotfiles.git
 cd ~/.dotfiles
-./install.sh
-```
-
-or you may want to clone the repo in whatever place you prefer, and then symlink it to your `~/.dotfiles`
-
-```sh
-git clone github.com:mklabs/dotfiles.git ~/code/where/you/like/to/put/stuff
-ln -s ~/code/where/you/like/to/put/stuff ~/.dotfiles
-cd ~/code/where/you/like/to/put/stuff
+git checkout mine
 ./install.sh
 ```
 
@@ -88,7 +80,7 @@ There's a few special files in the hierarchy.
 * some alias
 * .. and some other stuff, but not many
 
-## node stuff
+### node stuff
 
 A few
 [functions](https://github.com/mklabs/dotfiles/blob/mine/node/docs.bash)
@@ -138,13 +130,127 @@ all              buffers          dgram            globals          modules     
 appendix_1       child_processes  dns              http             net              querystring      streams          tls              vm
 ```
 
-#### node-docs
+### npm stuff
+
+* `nd` alias to `npm docs` which open the package's readme file with the
+  default browser. ('npm config get browser')
+
+* [npm-readme](https://github.com/mklabs/dotfiles/blob/mine/npm/npm.bash): custom bash script to generate manpage for any installed
+  npm packages, needs ronn installed.
+
+The first arguments is the npm package we want to man the readme.
+
+```sh
+npm-readme browserify             # try to load man page for the latest browserify version
+npm-readme npm                    # open the npm readme file in your man page viewer
+npm-readme redis                  # open the latest redis readme in your man page viewer
+```
+
+Optionnaly, a second `version` arguments can be used to be more specific about the man page generated.
+
+```sh
+npm-readme dnode 0.7.5
+npm-readme express 2.3.10
+npm-readme express 2.4.4
+npm-readme express 2.4.5
+```
+
+Man page are generated from the stuff in `~/.npm` which is the cache folder npm uses by default (`npm help cache`). If either a project does not provide a readme (readme.md, readme.mkd, readme.markdown), or the project@version is not already in the npm cache, this command will fail and try to explain why.
+
+**tab completion too \o/**: performs tabs completion by looking up the `~/.npm` folder, supports pkg/version. does not perform registry tab completion like npm does.
+
+```sh
+06:09:23  ~  «v0.4.8/1.0.27»  » npm-readme <tab><tab>
+Display all 172 possibilities? (y or n)
+06:09:23  ~  «v0.4.8/1.0.27»  » npm-readme connect-<tab><tab>
+connect-couchdb  connect-docco    connect-dojo     connect-form     connect-mongo    connect-redis
+06:09:23  ~  «v0.4.8/1.0.27»  » npm-readme express<tab>
+express           express-messages  express-mongoose  expresso
+
+06:12:51  ~  «v0.4.8/1.0.27»  » npm-readme c
+chainsaw         cliff            coffeekup        commondir        concrete         connect-couchdb  connect-dojo     connect-mongo    contextify       cradle           creationix       ctrlflow
+clean-css        coffee-script    colors           complete         connect          connect-docco    connect-form     connect-redis    couchapp         cradle-init      cssom            curry
+06:12:51  ~  «v0.4.8/1.0.27»  » npm-readme coffee
+coffee-script  coffeekup
+06:12:51  ~  «v0.4.8/1.0.27»  » npm-readme b
+backbone    bcrypt      browserify  burrito
+06:12:51  ~  «v0.4.8/1.0.27»  » npm-readme h
+h5eb                hamljs              hashish             hook                hook.io             hook.io-helloworld  hooks               html-minifier       htmlparser          http-server
+06:12:51  ~  «v0.4.8/1.0.27»  » npm-readme j
+jade     journey  jqtpl    jsdom
+06:12:51  ~  «v0.4.8/1.0.27»  » npm-readme n
+nabe                nconf               node-inspector      nodeunit            npm                 npm-docsite         nub
+nake                nih-op              node-markdown       nopt                npm-deploy          npm-github-service  nvm
+06:12:51  ~  «v0.4.8/1.0.27»  » npm-readme m
+markdown        meta-test       mime            mkdirp          mongodb         mongoose        mongoose-auth   mongoose-types  mustache
+06:12:51  ~  «v0.4.8/1.0.27»  » npm-readme express 2.
+2.3.10  2.4.4   2.4.5   2.4.6
+```
+
+Running `npm-readme coffee-script` will open the corresponding man page, generated from the project readme and would normally output this. And this is somehing pretty cool, if you ask me.
+
+```sh
+COFFEE-SCRIPT(3)                                                                                                                                                            COFFEE-SCRIPT(3)
+
+NAME
+       coffee-script -- version 1.1.2 - path: /Users/mk/.npm/coffee-script/1.1.2/package
+
+coffee-script
+       =
+                   {
+                }   }   {
+               {   {  }  }
+                }   }{  {
+               {  }{  }  }
+              ( }{ }{  { )                   / |     / |/ |
+            .- { { }  { }} -.               | |     __ | || | _
+           (  ( } { } { } }  )              | |    /  \|  |  /  \/  \
+           |-..________ ..-'|              | |___| (_) | | | ||  __/  __/
+           |                 |               \_____\___/|_| |_| \___|\___|
+           |                 ;--.
+           |                (__  \            _____           _       _
+           |                 | )  )          / ____|         (_)     | |
+           |                 |/  /          | (___   ___ _ __ _ _ __ | |_
+           |                 (  /            \___ \ / __| '__| | '_ \| __|
+           |                 |/              ____) | (__| |  | | |_) | |_
+           |                 |              |_____/ \___|_|  |_| .__/ \__|
+            -....-'                                  | |
+                                                               ||
+
+         CoffeeScript is a little language that compiles into JavaScript.
+
+         Install Node.js, and then the CoffeeScript compiler:
+         sudo bin/cake install
+
+         Or, if you have the Node Package Manager installed:
+         npm install -g coffee-script
+         (Leave off the -g if you don't wish to install globally.)
+
+         Compile a script:
+         coffee /path/to/script.coffee
+
+         For documentation, usage, and examples, see:
+         http://coffeescript.org/
+
+         To suggest a feature, report a bug, or general discussion:
+         http://github.com/jashkenas/coffee-script/issues/
+
+         If you'd like to chat, drop by #coffeescript on Freenode IRC,
+         or on webchat.freenode.net.
+
+         The source repository:
+         git://github.com/jashkenas/coffee-script.git
+
+```
 
 ## prompts
 
 basic prompt: `23:15:09  ~/.dotfiles  «v0.4.8/1.0.27»  (master) »`
 
-[npm completion](http://npmjs.org/doc/completion.html) is pretty neat..
+Both npm/git completion are included and `source`-d in corredponding
+bashrc/zshrc file.
+
+* [npm completion](http://npmjs.org/doc/completion.html) is pretty neat..
 
 > Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
 
@@ -156,31 +262,19 @@ bin          config       explore      help         info         link         ls
 c            deprecate    faq          help-search  init         list         outdated     prune        rebuild      root         search       submodule    uninstall    update
 ```
 
-```sh
-23:15:09  ~/.dotfiles  «v0.4.8/1.0.27»  (master) » npm install <tab>
-Display all 4196 possibilities? (y or n)
-```
+The npm tab completion is incredibly powerful, using it feels really good. Supports tab completion for npm packages (from the repository), and pretty much any command/cli options. Really [impressive](https://github.com/isaacs/npm/blob/master/lib/completion.js).
 
-> "What, 4196 possibilities ?"
+* [git completion](https://raw.github.com/git/git/master/contrib/completion/git-completion.bash)
 
-```sh
-23:15:09  ~/.dotfiles  «v0.4.8/1.0.27»  (master) » npm install hook<tab>
-hook                 hook.io-browser      hook.io-feed         hook.io-logger       hook.io-repl         hook.io-twilio       hook.io-webserver
-hook.io              hook.io-couch        hook.io-helloworld   hook.io-mailer       hook.io-request      hook.io-twitter      hook.io-ws
-hook.io-boxcar       hook.io-cron         hook.io-irc          hook.io-pinger       hook.io-sitemonitor  hook.io-webhook      hooks
-```
+> The contained completion routines provide support for completing:
+>
+>    * local and remote branch names
+>    * local and remote tag names
+>    * .git/remotes file names
+>    * git 'subcommands'
+>    * tree paths within 'ref:path/to/file' expressions
+>    * common --long-options
 
-Oh my..
-
-[git completion](https://raw.github.com/git/git/master/contrib/completion/git-completion.bash)
-
-```sh
-23:15:09  ~/.dotfiles  «v0.4.8/1.0.27»  (master) » git config color.<tab>
-color.branch               color.branch.remote        color.diff.meta            color.diff.whitespace      color.interactive.prompt   color.status.changed       color.status.updated
-color.branch.current       color.diff                 color.diff.new             color.interactive          color.pager                color.status.header        color.ui
-color.branch.local         color.diff.commit          color.diff.old             color.interactive.header   color.status               color.status.nobranch
-color.branch.plain         color.diff.frag            color.diff.plain           color.interactive.help     color.status.added         color.status.untracked
-```
 
 ```sh
 00:03:28  ~/.dotfiles  «v0.4.8/1.0.27»  (mine*+) » git --<tab>
@@ -188,13 +282,6 @@ color.branch.plain         color.diff.frag            color.diff.plain          
 
 00:03:28  ~/.dotfiles  «v0.4.8/1.0.27»  (mine*+) » git branch --<tab>
 --abbrev=     --color       --contains    --merged      --no-abbrev   --no-color    --no-merged   --no-track    --track       --verbose
-
-00:03:28  ~/.dotfiles  «v0.4.8/1.0.27»  (mine*+) » git diff --<tab>
---abbrev                --color                 --ext-diff              --ignore-space-change   --no-ext-diff           --patch-with-stat       --raw                   --summary
---base                  --color-words           --find-copies-harder    --inter-hunk-context=   --no-prefix             --patience              --shortstat             --text
---binary                --diff-filter=          --full-index            --name-only             --no-renames            --pickaxe-all           --src-prefix=           --theirs
---cached                --dst-prefix=           --ignore-all-space      --name-status           --numstat               --pickaxe-regex         --staged
---check                 --exit-code             --ignore-space-at-eol   --no-color              --ours                  --quiet                 --stat
 ```
 
 
