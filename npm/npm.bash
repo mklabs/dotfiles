@@ -45,8 +45,11 @@ $installed"
 
   Packages need to be cached by npm.
   "
+      echo " » Call npm cache add to grab the dependency pkg
+      "
+      npm cache add "$pkg"
+      npm-readme $pkg
     fi
-
     return 1
   fi
 
