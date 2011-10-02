@@ -1,0 +1,6 @@
+{
+  "author": "mklabs",
+  "name": "dotfiles",
+  "version": "0.0.0",
+  "scripts": { "start": "./install.sh" }
+}
