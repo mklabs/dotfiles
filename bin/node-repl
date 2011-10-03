@@ -1,10 +1,31 @@
 #!/usr/bin/env node
 
+//
+// custom node-repl - mainly to provide a way to edit files
+// in various text editors (mvim, mate, vim, ..) and execute
+// the results in repl context.
+//
+// Origal inspiration from:
+//
+//  * http://vimcasts.org/episodes/running-vim-within-irb/
+//  * http://gilesbowkett.blogspot.com/2007/10/use-vi-or-any-text-editor-from-within.html
+//  * http://slash7.com/2006/12/21/secrets-of-the-rails-console-ninjas/
+//
+// Practical implementation based on the one of samsonjs/repl-edit
+//
+//  * https://github.com/samsonjs/repl-edit/
+//
+// Caveats:
+//
+//  * the mvim stuff properly works on 0.5.8, but on 0.4.8 exists prematurly
+//   before the content is properly loaded into mvim (works in either case with `mate -w`)
+//
+
 var fs = require('fs'),
   child = require('child_process'),
   repl = require('repl'),
   path = require('path'),
-  vm = require('vm')
+  vm = require('vm'),
   colors = require('colors');
 
 console.log('Starting custom yellow REPL'.yellow);
@@ -12,11 +33,26 @@ console.log('Starting custom yellow REPL'.yellow);
 console.log('\n * Type .<tab><tab> for a list of command.'.grey);
 console.log(' * Type .mvim to open a new buffer in mvim.'.grey);
 console.log(' * Type .mate to open a new textmate window.'.grey);
-
 console.log('\nSave and quit to execute the file. `exports` object gets loaded in repl context.'.yellow);
 
 var nv = process.version.replace(/^v/, ''),
   replprefix = [nv].join('/') + ' >> ';
+
+// pause/unpause stuff
+var pause = function(repl) {
+  repl.outputStream.pause();
+  repl.inputStream.pause();
+  repl.rli.enabled = false;
+  repl.prompt = '';
+},
+
+unpause = function(repl) {
+  repl.prompt = replprefix;
+  repl.rli.enabled = true;
+  repl.outputStream.resume();
+  repl.inputStream.resume();
+  repl.displayPrompt();
+};
 
 // function that gets called when hitting `.vim`, '.mvim', '.mate' etc.
 var editor = function editor(ed) {
@@ -32,12 +68,16 @@ var editor = function editor(ed) {
     if(args === 'clean' || args === 'c') fs.createWriteStream(file)
         .on('error', function(error) { console.log(error); process.exit(1); });
 
+    // will have to pause the repl stream here, for some editors
+    pause(local);
     var editor = child.spawn(ed[0], ed.slice(1).concat(file), {customFds: fds});
     editor.on('exit', function(code) {
       var read = fs.createReadStream(file),
         context = vm.createContext(local.context),
         stdout = [];
 
+      // setup the context exports object, used on exit
+      // to augment the repl context
       context.exports = context.exports || {};
 
       read.on('data', function(d) { stdout.push(d); });
@@ -57,6 +97,8 @@ var editor = function editor(ed) {
           }
         }
 
+        // and resume here
+        unpause(local);
         console.log(('Editor exited with code ' + code + '. Script executed.')[code ? 'red' : 'green']);
       });
     });
@@ -82,20 +124,17 @@ local.defineCommand('hellonurse', {
 // on 0.4.8 get an early exit event with mvim, worked well
 // until was added the support for mate. mate works well.
 //
-// Child process exists while opening the file. 
+// Child process exists while opening the file.
 // Works as expected on 0.5.8
 local.defineCommand('mvim', {
   help: 'Opens up a new mvim buffer',
   action: editor('mvim')
 });
 
-/* * /
-// vim and other cli text-editor needs some more work, pause/resume repl
 local.defineCommand('vim', {
   help: 'Opens up a new vim buffer',
-  action: editor('mvim')
+  action: editor('vim')
 });
-/* */
 
 local.defineCommand('mate', {
   help: 'Opens up a new textmate window',
@@ -112,3 +151,4 @@ process.argv.slice(2).forEach(function(module) {
   console.log(('Register module ' + m + ' in repl context').yellow, mod);
   local.context[m] = mod;
 });
+
