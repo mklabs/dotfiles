@@ -37,6 +37,9 @@
 [branch.master]
   mergeoptions = log
 
+[branch]
+  autosetuprebase = always
+
 [color]
   branch = auto
   diff = auto
