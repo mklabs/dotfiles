@@ -1,7 +1,4 @@
 
-# Make locally installed npm modules' bin files be available in $PATH
-export PATH="./node_modules/.bin:$PATH"
-
 # Make .dotfiles/bin files executable
 export PATH="$HOME/.dotfiles/bin:$PATH"
 
