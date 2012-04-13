@@ -16,7 +16,7 @@ alias gi="git-init"
 
 alias ls='ls -hF'
 alias ll='ls -lhF'
-alias la='ls -A'
+alias la='ls -la'
 alias l='ls -lAhF'
 
 alias get='wget --no-check-certificate'
