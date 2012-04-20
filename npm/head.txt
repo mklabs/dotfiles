@@ -1,0 +1,4 @@
+:page-readme(1) -- npm info :page readme - generated manpage
+============================================================
+
+## :page
