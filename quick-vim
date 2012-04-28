@@ -1,4 +1,12 @@
 #!/bin/bash
+
+#
+# quick-vim install script
+#
+# borrowed to https://github.com/brianleroux/quick-vim and tweaked here
+# to match the repository structure
+#
+
 set -e
 
 help () {
@@ -39,6 +47,7 @@ install () {
     # and gvim config
     cp ./vim/.gvimrc ~/.gvimrc
     cp ./vim/.vimrc.local ~/.vimrc.local
+    cp ./vim/.gvimrc.local ~/.gvimrc.local
 
     # add in bundles from bundle.txt
     mkdir -p ~/.vim/bundle
