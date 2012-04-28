@@ -25,21 +25,6 @@ function node-docs {
   open "http://nodejs.org/docs/$(node --version)/api/$page.html$section"
 }
 
-
-# Open the node man page for the argument section.
-#
-# usage:
-#     node-man fs
-#     node-man path
-#     node-man vm
-#     node-man http
-#
-function node-man {
-  local page="$1"
-  [[ -z "$page" ]] && page="_toc"
-  man "node-$page"
-}
-
 # Opens the source file on github for the argument node module and
 # the current node version. Optionnal line args let you jump directly
 # to the line number. This is really usefull when you get some stack trace,
