@@ -29,7 +29,7 @@ script is based on [@brianleroux's quick-vim](https://github.com/brianleroux/qui
 #### Linter
 
 * [Tabular](http://vimcasts.org/episodes/aligning-text-with-tabular-vim/) Align declarations, equals signs, etc.
-* [JSHint](https://github.com/manalang/jshint.vim) JSHint plugin
+* [Syntastic](https://github.com/scrooloose/syntastic) Syntax checking hacks for vim
 
 #### Syntax
 

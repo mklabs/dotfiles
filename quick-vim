@@ -77,7 +77,7 @@ uninstall () {
 upgrade () {
     uninstall
     rm -rf node_modules
-    git pull
+    git pull origin master
     npm i && npm run-script vim-install
 }
 
