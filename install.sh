@@ -5,9 +5,9 @@
 #
 # and adapted here to work on linked directory and autoload
 # per-topics `*.ln` files in this directory
-
-# submodules init/update
-git submodule init && git submodule update
+#
+# Once dotfiles are linked to the $HOME dir, the vim config / environment is
+# setup using brianleroux/quick-vim install script
 
 
 # backup and link all the dotfiles within topics
@@ -38,3 +38,8 @@ for i in **/*.ln; do
 done
 
 
+echo """
+  quick-vim install
+"""
+
+./quick-vim install
