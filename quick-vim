@@ -42,7 +42,7 @@ install () {
 
     # copy in vimrc and pathogen
     cp ./vim/.vimrc ~/.vimrc
-    cp -r ./vim/vim ~/.vim
+    cp -r ./vim/vim/ ~/.vim/
 
     # and gvim config
     cp ./vim/.gvimrc ~/.gvimrc
