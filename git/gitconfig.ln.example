@@ -11,7 +11,11 @@
 
 [user]
   email = your@example.com
-  name = Mickael Daniel
+  name = yourname
+
+[github]
+  user = yourgithubser
+  token = your github token
 
 [core]
   filemode = false
@@ -63,6 +67,3 @@
   tool = vimdiff
 [merge]
   tool = vimdiff
-
-[github]
-  user = mklabs
