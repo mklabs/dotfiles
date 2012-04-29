@@ -13,3 +13,4 @@ git://github.com/tomtom/tcomment_vim.git
 git://github.com/msanders/snipmate.vim.git
 git://github.com/mklabs/snipmate-css3-please.git
 git://github.com/mklabs/node.snipmate.git
+git://github.com/mklabs/vim-backbone.git
