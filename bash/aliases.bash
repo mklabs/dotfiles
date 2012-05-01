@@ -20,3 +20,6 @@ alias la='ls -la'
 alias l='ls -lAhF'
 
 alias get='wget --no-check-certificate'
+
+
+alias t="todo"
