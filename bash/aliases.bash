@@ -21,3 +21,6 @@ alias get='wget --no-check-certificate'
 
 alias t='todo -d ~/.dotfiles/todo/todo.cfg'
 
+# m to mvim current working directory
+alias m='mvim .'
+
