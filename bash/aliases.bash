@@ -1,7 +1,5 @@
-function git-init {
-  rm -rf ${PWD}/.git/hooks/
-  git init --template=$HOME/.dotfiles/git/templates
-}
+
+# todo: split this up by topics
 
 
 alias tu='top -o cpu' # cpu
@@ -21,5 +19,5 @@ alias l='ls -lAhF'
 
 alias get='wget --no-check-certificate'
 
+alias t='todo -d ~/.dotfiles/todo/todo.cfg'
 
-alias t="todo"

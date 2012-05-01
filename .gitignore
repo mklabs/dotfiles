@@ -9,3 +9,6 @@ npm/.man.swp
 
 # vim backup folder
 backup/
+
+# todo.txt dir
+todo/.todo

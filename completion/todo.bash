@@ -80,28 +80,16 @@ _todo()
     COMPREPLY=( $( compgen -W "$completions" -- $cur ))
     return 0
 }
-complete -F _todo todo.sh
 
-# If you define an alias (e.g. "t") to todo.sh, you need to explicitly enable
-# completion for it, too:
-#complete -F _todo t
-
-# If you have renamed the todo.sh executable, or if it is not accessible through
-# PATH, you need to add and use a wrapper completion function, like this:
-#_todoElsewhere()
-#{
-#    local _todo_sh='/path/to/todo2.sh'
-#    _todo "$@"
-#}
-#complete -F _todoElsewhere /path/to/todo2.sh
+complete -F _todo todo
 
 # If you use aliases to use different configuration(s), you need to add and use
 # a wrapper completion function for each configuration if you want to complete
 # fron the actual configured task locations:
-#alias todo2='todo.sh -d "$HOME/todo2.cfg"'
-#_todo2()
-#{
-#    local _todo_sh='todo.sh -d "$HOME/todo2.cfg"'
-#    _todo "$@"
-#}
-#complete -F _todo2 todo2
+_todoElsewhere() {
+  local _todo_sh='t'
+  _todo "$@"
+}
+
+complete -F _todoElsewhere t
+
