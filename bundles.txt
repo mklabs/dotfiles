@@ -15,3 +15,4 @@ git://github.com/mklabs/snipmate-css3-please.git
 git://github.com/mklabs/node.snipmate.git
 git://github.com/mklabs/vim-backbone.git
 git://github.com/tpope/vim-cucumber.git
+git://github.com/nono/vim-handlebars.git
