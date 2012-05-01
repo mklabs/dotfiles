@@ -17,6 +17,10 @@
   user = yourgithubser
   token = your github token
 
+# init template, change this to your prefered git setup
+[init]
+  templatedir = ~/.dotfiles/git/templates/default
+
 [core]
   filemode = false
   autocrlf = false
