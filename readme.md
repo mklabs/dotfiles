@@ -1,4 +1,4 @@
-*my personal dotfileas*
+*my personal dotfiles*
 
 bash, vim, git, npm, node.
 
@@ -16,19 +16,18 @@ The install script will symlink the appropriate files in `.dotfiles` to your
 home directory. Files (folders included) ending with `*.ln` will get symlinked.
 note that previous files are backuped in `~/.dotfile_backup/` folder.
 
-Any files ending with `.bash` in any of the repo subdirs is sources by
+Any files ending with `.bash` in any of the repo subdirs is sourced by
 the `.bashrc` [file](https://github.com/mklabs/dotfiles/blob/master/bash/bashrc.ln)
 
 ## vim config
+
+[info](https://github.com/mklabs/dotfiles/tree/master/vim/#readme)
 
 Vim plugins are managed via
 [Pathogen](https://github.com/tpope/vim-pathogen). Installation / update
 is based on the excellent [@brianleroux's
 quick-vim](https://github.com/brianleroux/quick-vim) script. Plugins are
-managed trhough a simple `bundle.txt` [file](https://github.com/mklabs/dotfiles/blob/master/bundles.txt).
-
-[info](https://github.com/mklabs/dotfiles/tree/master/vim/#readme))
-
+managed through a simple `bundle.txt` [file](https://github.com/mklabs/dotfiles/blob/master/bundles.txt).
 
 ## git config
 
@@ -54,13 +53,34 @@ completion. Other completions scripts may go in the
 ## bash dir
 
 Includes alias, symlinked bashrc file and some configuration /
-environment setup. Custom prompt defined in config.bash.
+environment setup. Custom prompt defined in config.bash. This directory
+is added to the `$PATH` variable, so any script file in this folder ends
+up globally accessible.
 
 ## node dir
 
 Includes simple bash function helpers to help working with node. Usually
 related to documentation browsing and helpers to easily jump to a given
 source file on joyent/node repo.
+
+```sh
+$ node --version
+v0.6.1
+
+$ node-docs fs fs.createReadStream
+>> Open http://nodejs.org/docs/v0.6.1/api/fs.html#fs.createReadStream
+
+$ node-docs vm
+>> Open http://nodejs.org/docs/v0.6.1/api/vm.html
+
+$ node-src readline 89
+>> Open https://github.com/joyent/node/blob/v0.6.1/lib/readline.js#L89
+
+$ node-src stream
+>> 
+```
+
+Both functions have a really limited amount of completion.
 
 ## npm dir
 
@@ -74,6 +94,18 @@ package readme (similar as npm docs, but bump the readme to the
 console). May also create the according manpage dinamycally and view
 this through man (https://github.com/kapouer/ronnjs should be installed
 and globally available)
+
+```sh
+# simple wrapper to npm info <pkg> readme
+$ npm-readme request
+>> Bump mikeal/request readme to the console
+
+$ npm-man request
+>> Same but display readme as manpage
+```
+
+Works for any recently updated package on the npm registry (eg. `npm
+info <pkg> readme` should return something)
 
 ## todo dir
 
