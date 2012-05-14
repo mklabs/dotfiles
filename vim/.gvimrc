@@ -2,7 +2,7 @@
 " borrowed to https://github.com/carlhuda/janus
 " Copy to ~/.gvimrc
 
-set guifont=Inconsolata:h20       " Font family and font size.
+set guifont=Inconsolata\ 12       " Font family and font size
 set antialias                     " MacVim: smooth fonts.
 set encoding=utf-8                " Use UTF-8 everywhere.
 set guioptions-=T                 " Hide toolbar.
@@ -97,7 +97,7 @@ function s:CdIfDirectory(directory)
 
   " Allows reading from stdin
   " ex: git diff | mvim -R -
-  if strlen(a:directory) == 0 
+  if strlen(a:directory) == 0
     return
   endif
 
