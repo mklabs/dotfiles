@@ -1,14 +1,14 @@
 #!/bin/bash
 
+#
 # coming from isaacs/dotfiles
 # > https://raw.github.com/isaacs/dotfiles/master/install.sh
 #
 # and adapted here to work on linked directory and autoload
 # per-topics `*.ln` files in this directory
 #
-# Once dotfiles are linked to the $HOME dir, the vim config / environment is
-# setup using brianleroux/quick-vim install script
-
+# Once dotfiles are linked to the $HOME dir
+#
 
 # backup and link all the dotfiles within topics
 ! [ -d ~/.dotfile_backup ] && mkdir ~/.dotfile_backup
@@ -36,10 +36,3 @@ for i in **/*.ln; do
   # append empty line between each dotfiles
   echo;
 done
-
-
-echo """
-  quick-vim install
-"""
-
-./quick-vim install

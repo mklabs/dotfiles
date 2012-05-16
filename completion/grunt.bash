@@ -1,6 +1,3 @@
-
-
-# grunt
 # https://github.com/cowboy/grunt
 #
 # Copyright (c) 2012 "Cowboy" Ben Alman

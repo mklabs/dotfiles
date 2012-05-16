@@ -1,6 +1,6 @@
 *my personal dotfiles*
 
-bash, vim, git, npm, node.
+bash, git, npm, node.
 
 ## install
 
@@ -8,6 +8,8 @@ bash, vim, git, npm, node.
 git clone git://github.com/mklabs/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 npm i
+# or ./install
+# pretty much the same
 ```
 
 *`install.sh` script based on @isaac's dotfiles install script*
@@ -18,16 +20,6 @@ note that previous files are backuped in `~/.dotfile_backup/` folder.
 
 Any files ending with `.bash` in any of the repo subdirs is sourced by
 the `.bashrc` [file](https://github.com/mklabs/dotfiles/blob/master/bash/bashrc.ln)
-
-## vim config
-
-[info](https://github.com/mklabs/dotfiles/tree/master/vim/#readme)
-
-Vim plugins are managed via
-[Pathogen](https://github.com/tpope/vim-pathogen). Installation / update
-is based on the excellent [@brianleroux's
-quick-vim](https://github.com/brianleroux/quick-vim) script. Plugins are
-managed through a simple `bundle.txt` [file](https://github.com/mklabs/dotfiles/blob/master/bundles.txt).
 
 ## git config
 
@@ -77,7 +69,7 @@ $ node-src readline 89
 >> Open https://github.com/joyent/node/blob/v0.6.1/lib/readline.js#L89
 
 $ node-src stream
->> 
+>> Open https://github.com/joyent/node/blob/v0.6.1/lib/stream.js#L1
 ```
 
 Both functions have a really limited amount of completion.

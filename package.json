@@ -3,9 +3,6 @@
   "name": "dotfiles",
   "version": "0.0.0",
   "scripts": {
-    "install": "./install.sh",
-    "vim-install": "./quick-vim install",
-    "vim-uninstall": "./quick-vim uninstall",
-    "vim-upgrade": "./quick-vim upgrade"
+    "install": "./install.sh"
   }
 }
