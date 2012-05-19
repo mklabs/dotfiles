@@ -13,6 +13,13 @@
 # backup and link all the dotfiles within topics
 ! [ -d ~/.dotfile_backup ] && mkdir ~/.dotfile_backup
 
+
+# Link them all
+# -------------
+#
+# glob for files ending with .ln in the dotfile repo, they get symlinked
+# to the $HOME directory.
+#
 for i in **/*.ln; do
   last=${i##*\/}
   dotfile=.${last%*.ln}
@@ -33,6 +40,31 @@ for i in **/*.ln; do
     echo "  x Failed on $i\n" > /dev/stderr
     exit 1
   fi
+
   # append empty line between each dotfiles
   echo;
 done
+
+
+#
+# Fetch them all
+# --------------
+#
+# External programs that get either installed or updated when install is
+# run
+#
+
+function install() {
+  echo ... Installing $1: $2 ...
+  curl $2 > ~/.dotfiles/bin/$1
+  chmod +x ~/.dotfiles/bin/$1
+}
+
+# Ack: http://betterthangrep.com/install/
+install ack http://betterthangrep.com/ack-standalone
+
+# nave: https://github.com/isaacs/nave
+install nave https://github.com/isaacs/nave/blob/master/nave.sh
+
+# hub: https://github.com/defunkt/hub#standalone
+install hub http://defunkt.io/hub/standalone
