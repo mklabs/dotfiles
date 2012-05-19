@@ -56,7 +56,7 @@ done
 
 function install() {
   echo ... Installing $1: $2 ...
-  curl $2 > ~/.dotfiles/bin/$1
+  curl $2 > ~/.dotfiles/bin/$1 -k
   chmod +x ~/.dotfiles/bin/$1
 }
 
@@ -64,7 +64,7 @@ function install() {
 install ack http://betterthangrep.com/ack-standalone
 
 # nave: https://github.com/isaacs/nave
-install nave https://github.com/isaacs/nave/blob/master/nave.sh
+install nave https://raw.github.com/isaacs/nave/master/nave.sh
 
 # hub: https://github.com/defunkt/hub#standalone
 install hub http://defunkt.io/hub/standalone
