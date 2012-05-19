@@ -12,3 +12,7 @@ backup/
 
 # todo.txt dir
 todo/.todo
+
+# remotely installed standalone binaries
+bin/*
+
