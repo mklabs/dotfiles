@@ -1,4 +1,6 @@
 
+$HOME/.dotfiles/bin/nave use 0.6.18
+
 # Load all the `.bash` files in `.dotfiles` topics
 for i in ~/.dotfiles/**/*.bash; do
   if [ -e $i ]; then
@@ -7,4 +9,5 @@ for i in ~/.dotfiles/**/*.bash; do
 done
 
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+# Add RVM to PATH for scripting
+PATH=$PATH:$HOME/.rvm/bin
