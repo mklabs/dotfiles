@@ -9,31 +9,15 @@
 //
 // http://progit.org/book/ch7-3.html
 
+var exists = require('fs').existsSync || require('path').existsSync;
 
-var npm = nrequire('npm');
-if (npm) return npm.load(function(e, n) {
-  this.commands.test(function(e) {
-    process.exit(e ? 1 : 0);
-  });
-});
+// check for package.json, if so trigger npm test
+if(!exists('package.json')) return;
 
-
-// npm not installed locally, spawn process instead.
-// Basically the same, but less pretty.
-var spawn = require('child_process').spawn,
-  ch = spawn('npm', ['test']);
-
-ch.stdout.pipe(process.stdout, {end: false});
+var spawn = require('child_process').spawn;
+var ch = spawn('npm', ['test']);
+ch.stdout.pipe(process.stdout);
 ch.stderr.pipe(process.stderr);
 ch.on('exit', function (code) {
   process.exit(code ? 1 : 0);
 });
-
-
-function nrequire(m) {
-  var n;
-  try { n = require(m); }
-  catch(e) { console.log('please, install ' + m + ' locally to be able to use it programmatically. Will spawn process instead. \n'); }
-  return n;
-}
-
