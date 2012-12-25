@@ -23,8 +23,5 @@ suggested patterns and hook files are all modifiable and extensible.
 
 * default:
   * excludes commonly .gitignored files: `.DS_Store node_modules npm-debug.log`
-  * pre-commit hook: Runs npm test, abort commit on test fail. If npm is
-    installed locally (eg. node_modules/npm is there), npm is used
-    programmatically, otherwise the global `npm` binary is used.
-
+  * pre-commit hook: Runs `make lint test`
 

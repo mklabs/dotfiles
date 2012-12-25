@@ -1,23 +1,3 @@
-#!/usr/bin/env node
+#!/bin/bash
 
-// replace .git/hooks/pre-commit hook by these lines
-//
-// will run `npm test` and prevent commits on test fail
-// or .git/hooks/post-commit, .git/hooks/pre-commit, .git/hooks/post-receive, ...
-//
-// To enable this hook, make this file executable by `chmod +x .git/hooks/pre-commit`.
-//
-// http://progit.org/book/ch7-3.html
-
-var exists = require('fs').existsSync || require('path').existsSync;
-
-// check for package.json, if so trigger npm test
-if(!exists('package.json')) return;
-
-var spawn = require('child_process').spawn;
-var ch = spawn('npm', ['test']);
-ch.stdout.pipe(process.stdout);
-ch.stderr.pipe(process.stderr);
-ch.on('exit', function (code) {
-  process.exit(code ? 1 : 0);
-});
+make lint test
