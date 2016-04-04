@@ -15,6 +15,8 @@
 [core]
   filemode = false
   autocrlf = false
+  trustctime = false
+  editor = vim
 
 [alias]
   ci = commit
@@ -62,3 +64,5 @@
   tool = vimdiff
 [merge]
   tool = vimdiff
+[push]
+  default = matching
