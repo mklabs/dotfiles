@@ -12,3 +12,6 @@ alias ls='ls -hF'
 alias ll='ls -lhF'
 alias la='ls -la'
 alias l='ls -lAhF'
+
+alias at='atom.cmd'
+alias mt='atom.cmd'

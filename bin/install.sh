@@ -8,11 +8,8 @@
 # per-topics `*.ln` files in this directory
 #
 # Once dotfiles are linked to the $HOME dir
-#
-
 # backup and link all the dotfiles within topics
 ! [ -d ~/.dotfile_backup ] && mkdir ~/.dotfile_backup
-
 
 # Link them all
 # -------------
@@ -44,3 +41,7 @@ for i in **/*.ln; do
   # append empty line between each dotfiles
   echo;
 done
+
+# Clone and install z
+[ -e z/z.bash ] || git clone https://github.com/rupa/z.git ~/.dotfiles/z
+[ -e z/z.bash ] || cp z/z.sh z/z.bash

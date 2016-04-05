@@ -8,6 +8,10 @@
 # install this to the correct location by running the project's `install.sh`
 # script.
 
+[user]
+  name = Mickael Daniel
+  email = daniel.mickael@gmail.com
+
 # init template, change this to your prefered git setup
 [init]
   templatedir = ~/.dotfiles/git/templates/default
