@@ -5,7 +5,7 @@
 ```sh
 git clone git://github.com/mklabs/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-./install.sh
+./bin/install
 ```
 
 ## Overview
@@ -17,20 +17,14 @@ cd ~/.dotfiles
 Using the following snippet
 
 ```sh
-# Load all the `.sh` files in `.dotfiles` topics
+# Load all the `.sh` files in the `.dotfiles` folder
 for i in ~/.dotfiles/**/*.sh; do
   if [ -e $i ]; then
     . $i
   fi
 done
-
-# Load all the `.sh` files in root folder
-for i in ~/.dotfiles/*.sh; do
-  if [ -e $i ]; then
-    . $i
-  fi
-done
 ```
+
 ### ./install.sh
 
 [install.sh](./install.sh) is script based on [@isaac's dotfiles install script](https://github.com/isaacs/dotfiles/blob/master/install.sh)
@@ -38,10 +32,6 @@ done
 Will symlink the appropriate files in `.dotfiles` to the home directory.
 
 The install script also clones in `rupa/z` repository, because it is so handy.
-
-### ./bin
-
-The `./bin` directory is used to put globally available scripts and programs. This directory is added to the $PATH.
 
 ### Git template
 

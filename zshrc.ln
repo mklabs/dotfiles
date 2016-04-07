@@ -1,0 +1,8 @@
+# Load all the `.bash` files in `.dotfiles` topics
+
+for i in ~/.dotfiles/**/*.sh; do
+  if [ -e $i ]; then
+    echo "... Loading $i ...";
+    source $i
+  fi
+done
