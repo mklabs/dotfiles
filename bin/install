@@ -103,3 +103,13 @@ sudo apt-get update -y
 sudo apt-get install -y python-dev python-pip python3-dev python3-pip
 sudo apt-get install -y neovim
 sudo pip3 install neovim
+
+# Chrome
+[ -e .vendors/chrome-stable.deb ] || wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O .vendors/chrome-stable.deb
+sudo dpkg -i ./.vendors/chrome-stable.deb
+
+# Node & nvm
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
+export NVM_DIR="/home/mk/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+nvm install node
