@@ -66,7 +66,7 @@ done
 # Ubuntu
 
 # Install zsh, git & tree
-sudo apt-get install git tree zsh
+sudo apt-get install git tree zsh fonts-droid
 
 # Clone and install z
 [ -e .vendors/z/ ] || git clone https://github.com/rupa/z.git ~/.dotfiles/.vendors/z
@@ -82,6 +82,10 @@ sudo apt-get install git tree zsh
 
 # set default profile to ocean dark
 gconftool-2 --set --type string /apps/gnome-terminal/global/default_profile base-16-ocean-dark
+
+# Fonts
+gconftool-2 --set /apps/gnome-terminal/profiles/base-16-ocean-dark/font --type string "Droid Sans Mono 15"
+gconftool-2 --set /apps/gnome-terminal/profiles/base-16-ocean-dark/use_system_font --type=boolean false
 
 # oh my zsh
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
