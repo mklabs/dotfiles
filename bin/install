@@ -61,6 +61,29 @@ for i in *.ln; do
   backupAndLink $dotfile $i
 done
 
+# Platform specific (todo next install on centos, abstract away from package manager)
+
+# Ubuntu
+
+# Install zsh, git & tree
+sudo apt-get install git tree zsh
+
 # Clone and install z
-[ -e z/z.bash ] || git clone https://github.com/rupa/z.git ~/.dotfiles/z
-[ -e z/z.bash ] || cp z/z.sh z/z.bash
+[ -e .vendors/z/ ] || git clone https://github.com/rupa/z.git ~/.dotfiles/.vendors/z
+
+# Terminal theme
+[ -e .vendors/base16-gnome-terminal/ ] || git clone https://github.com/chriskempson/base16-gnome-terminal.git ~/.dotfiles/.vendors/base16-gnome-terminal
+./.vendors/base16-gnome-terminal/base16-eighties.dark.sh
+./.vendors/base16-gnome-terminal/base16-tomorrow.dark.sh
+./.vendors/base16-gnome-terminal/base16-ocean.dark.sh
+
+# oh my zsh
+sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+# Sindre's pure pronpt
+[ -e .vendors/pure/ ] || git clone https://github.com/sindresorhus/pure.git
+mkdir -p ~/.oh-my-zsh/functions
+ln -s "$PWD/.vendors/pure/pure.zsh" ~/.oh-my-zsh/functions/prompt_pure_setup
+ln -s "$PWD/.vendors/pure/async.zsh" ~/.oh-my-zsh/functions/async
+
+# Neovim

@@ -1,20 +1,2 @@
 node_modules
-
-# ignore both git/npm config
-npm/npmrc.ln
-git/gitconfig.ln
-
-# npm man tmp file used in npm-readme
-npm/.man.swp
-
-# vim backup folder
-backup/
-
-# todo.txt dir
-todo/.todo
-
-# remotely installed standalone binaries
-bin/*
-
-z/
-bash-git-prompt/
+.vendors
