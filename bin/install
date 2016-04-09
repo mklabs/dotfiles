@@ -15,11 +15,14 @@ source $dir/dotfiles
 # Ubuntu stuff
 source $dir/ubuntu
 
+# neovim
+source $dir/neovim
+
 # Z jumper
 source $dir/z
 
-# Install packages (git, etc.)
-source $dir/packages
+# Albert (alt space)
+source $dir/albert
 
 # Configure terminal profile & font
 source $dir/themes

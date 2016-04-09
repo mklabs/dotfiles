@@ -1,0 +1,12 @@
+
+pwd=$(pwd)
+
+sudo apt-get install libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
+
+git clone --depth 1 https://github.com/neovim/neovim.git ~/.dotfiles/.vendors/neovim
+cd ~/.dotfiles/.vendors/neovim
+
+make
+sudo make install
+
+cd $pwd
