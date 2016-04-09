@@ -1,115 +1,31 @@
 #!/bin/bash
 
-#
-# coming from isaacs/dotfiles
-# > https://raw.github.com/isaacs/dotfiles/master/install.sh
-#
-# and adapted here to work on linked directory and autoload
-# per-topics `*.ln` files in this directory
-#
-# Once dotfiles are linked to the $HOME dir
-# backup and link all the dotfiles within topics
-! [ -d ~/.dotfile_backup ] && mkdir ~/.dotfile_backup
+dir="$(dirname "$0")"
 
-# Link them all
-# -------------
-#
-# glob for files ending with .ln in the dotfile repo, they get symlinked
-# to the $HOME directory.
+cd ~/.dotfiles
+mkdir -p .vendors
 
+# Install oh my zsh & Sindre's pure prompt
+source $dir/zsh
 
-backupAndLink () {
+# Backup and link .dotfiles in this repo (must happen after oh-my-zsh install
+# to replace ozsh default's zshrc)
+source $dir/dotfiles
 
-  echo "» About to backup and link dotfile: $1..."
+# Ubuntu stuff
+source $dir/ubuntu
 
-  if [[ -e ~/$1 ]]; then
+# Z jumper
+source $dir/z
 
-    if ! ( rm -rf ~/.dotfile_backup/$1 || cp -r ~/$1 ~/.dotfile_backup/$1 ) || ! ( rm -rf ~/$1 || unlink ~/$1 ); then
-      echo "  x Failed on $1" > /dev/stderr
-      exit 1
-    else
-      echo "  * $1 stored -> ~/.dotfiles_backup/$1" > /dev/stderr
-    fi
+# Install packages (git, etc.)
+source $dir/packages
 
-  fi
+# Configure terminal profile & font
+source $dir/themes
 
-  echo "» Linking $2 to your home directory -> ~/$1";
+# Install node & nvm
+source $dir/node
 
-  if ln -s $(pwd)/$2 ~/$1; then
-    echo "  * Linked: $1 -> $2" > /dev/stderr
-  else
-    echo "  x Failed on $2\n" > /dev/stderr
-    exit 1
-  fi
-
-  # append empty line between each dotfiles log
-  echo;
-}
-
-
-for i in **/*.ln; do
-  last=${i##*\/}
-  dotfile=.${last%*.ln}
-
-  backupAndLink $dotfile $i
-done
-
-for i in *.ln; do
-  last=${i##*\/}
-  dotfile=.${last%*.ln}
-
-  backupAndLink $dotfile $i
-done
-
-# Platform specific (todo next install on centos, abstract away from package manager)
-
-# Ubuntu
-
-# Install zsh, git & tree
-sudo apt-get update -y
-sudo apt-get install -y git tree zsh fonts-droid software-properties-common
-
-# Clone and install z
-[ -e .vendors/z/ ] || git clone https://github.com/rupa/z.git ~/.dotfiles/.vendors/z
-
-# Themes
-# ------
-
-# Clone in base16 repository and add a few profile
-[ -e .vendors/base16-gnome-terminal/ ] || git clone https://github.com/chriskempson/base16-gnome-terminal.git ~/.dotfiles/.vendors/base16-gnome-terminal
-./.vendors/base16-gnome-terminal/base16-eighties.dark.sh
-./.vendors/base16-gnome-terminal/base16-tomorrow.dark.sh
-./.vendors/base16-gnome-terminal/base16-ocean.dark.sh
-
-# set default profile to ocean dark
-gconftool-2 --set --type string /apps/gnome-terminal/global/default_profile base-16-ocean-dark
-
-# Fonts
-gconftool-2 --set /apps/gnome-terminal/profiles/base-16-ocean-dark/font --type string "Droid Sans Mono 15"
-gconftool-2 --set /apps/gnome-terminal/profiles/base-16-ocean-dark/use_system_font --type=boolean false
-
-# oh my zsh
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-
-# Sindre's pure pronpt
-[ -e .vendors/pure/ ] || git clone https://github.com/sindresorhus/pure.git .vendors/pure
-mkdir -p ~/.oh-my-zsh/functions
-ln -s "$PWD/.vendors/pure/pure.zsh" ~/.oh-my-zsh/functions/prompt_pure_setup
-ln -s "$PWD/.vendors/pure/async.zsh" ~/.oh-my-zsh/functions/async
-
-# Neovim
-sudo add-apt-repository -y ppa:neovim-ppa/unstable
-sudo apt-get update -y
-sudo apt-get install -y python-dev python-pip python3-dev python3-pip
-sudo apt-get install -y neovim
-sudo pip3 install neovim
-
-# Chrome
-[ -e .vendors/chrome-stable.deb ] || wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O .vendors/chrome-stable.deb
-sudo dpkg -i ./.vendors/chrome-stable.deb
-
-# Node & nvm
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
-export NVM_DIR="/home/mk/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-nvm install node
+# Install chrome
+source $dir/chrome

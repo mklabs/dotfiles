@@ -1,0 +1,29 @@
+# Themes
+# ------
+
+# Fonts
+
+sudo apt-get install fonts-droid
+
+BASE_KEY="/org/gnome/terminal/legacy/profiles:"
+DEFAULT_PROFILE=`dconf list $BASE_KEY/ | grep '^:' | head -n1 | tr -d :/`
+BASE_PROFILE="$BASE_KEY/:$DEFAULT_PROFILE"
+
+dconf write "$BASE_PROFILE/use-system-font" "false"
+dconf write "$BASE_PROFILE/font" "'Droid Sans Mono 15'"
+
+# Clone in base16 repository and add a few profile
+# [ -e .vendors/base16-gnome-terminal/ ] || git clone https://github.com/chriskempson/base16-gnome-terminal.git ~/.dotfiles/.vendors/base16-gnome-terminal
+./.vendors/base16-gnome-terminal/base16-eighties.dark.sh
+./.vendors/base16-gnome-terminal/base16-tomorrow.dark.sh
+./.vendors/base16-gnome-terminal/base16-ocean.dark.sh
+
+# For gnome 2
+# -----------
+#
+# # set default profile to ocean dark
+# gconftool-2 --set --type string /apps/gnome-terminal/global/default_profile base-16-ocean-dark
+#
+# # Fonts
+# gconftool-2 --set /apps/gnome-terminal/profiles/base-16-ocean-dark/font --type string "Droid Sans Mono 15"
+# gconftool-2 --set /apps/gnome-terminal/profiles/base-16-ocean-dark/use_system_font --type=boolean false

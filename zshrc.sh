@@ -2,6 +2,7 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=$HOME/.oh-my-zsh
 
 source $ZSH/oh-my-zsh.sh
+source $HOME/.dotfiles/.vendors/z/z.sh
 
 # Pure prompt setup (thanks Sindre ;)) https://github.com/sindresorhus/pure
 autoload -U promptinit && promptinit

@@ -1,0 +1,10 @@
+# oh my zsh
+sudo chsh -s /bin/zsh
+git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+
+# Sindre's pure prompt
+[ -e .vendors/pure/ ] || git clone https://github.com/sindresorhus/pure.git .vendors/pure
+mkdir -p ~/.oh-my-zsh/functions
+ln -s "$PWD/.vendors/pure/pure.zsh" ~/.oh-my-zsh/functions/prompt_pure_setup
+ln -s "$PWD/.vendors/pure/async.zsh" ~/.oh-my-zsh/functions/async
+

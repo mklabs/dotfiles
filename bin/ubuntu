@@ -1,0 +1,21 @@
+# Platform specific (todo next install on centos, abstract away from package manager)
+
+# Ubuntu
+
+# Install zsh, git & tree
+sudo apt-get update -y
+sudo apt-get install -y git tree zsh curl xclip
+
+# for gnome shell
+sudo apt-get install cmake
+
+pwd=$(pwd)
+
+git clone git://git.gnome.org/chrome-gnome-shell .vendors/chrome-gnome-shell
+mkdir .vendors/chrome-gnome-shell/build
+cd .vendors/chrome-gnome-shell/build
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_EXTENSION=OFF ../
+sudo make install
+
+cd $pwd

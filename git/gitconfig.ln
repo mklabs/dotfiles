@@ -20,7 +20,7 @@
   filemode = false
   autocrlf = false
 	trustctime = false
-  editor = vim
+  editor = nvim
 
 [alias]
   ci = commit
