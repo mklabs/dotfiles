@@ -7,7 +7,7 @@ sudo apt-get update -y
 sudo apt-get install -y git tree zsh curl xclip gnome-tweak-tool ack
 
 # for gnome shell
-sudo apt-get install cmake
+sudo apt-get install -y cmake
 
 pwd=$(pwd)
 
