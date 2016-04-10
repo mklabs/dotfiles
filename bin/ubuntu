@@ -2,12 +2,8 @@
 
 # Ubuntu
 
-# Install zsh, git & tree
 sudo apt-get update -y
-sudo apt-get install -y git tree zsh curl xclip gnome-tweak-tool ack
-
-# for gnome shell
-sudo apt-get install -y cmake
+sudo apt-get install -y git tree curl xclip gnome-tweak-tool ack-grep cmake python3-pip
 
 pwd=$(pwd)
 

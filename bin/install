@@ -15,7 +15,7 @@ source $dir/dotfiles
 # Ubuntu stuff
 source $dir/ubuntu
 
-# neovim
+# neovim & vim config
 source $dir/neovim
 
 # Z jumper
