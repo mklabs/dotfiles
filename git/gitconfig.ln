@@ -33,6 +33,7 @@
   lg = log --graph --pretty=format:'%Cred%h%Creset %C(yellow)%an%d%Creset %s %Cgreen(%cr)%Creset' --date=relative
   lo = log --oneline
   authors = log --pretty=format:'%an <%ae>'
+  dc = diff --cached
   df = diff
   dif = diff
   di = diff
