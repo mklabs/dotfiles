@@ -13,5 +13,10 @@ alias l='ls -lAhF'
 # neovim
 alias vim="nvim"
 alias n="nvim"
-alias v="nvim"
-alias mt="nvim"
+# alias v="nvim"
+# alias mt="nvim"
+
+alias byby="byzanz-record -d 10 --delay=2 -x 0 -y 30 -w 1920 -h 1035 /tmp/byzanz.gif"
+
+# fzf vim finder
+alias docker="sudo docker"
