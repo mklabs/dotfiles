@@ -34,3 +34,8 @@ function vimfiles() {
     vim $file;
   fi
 }
+
+function gt() {
+  file=$(git status -s | sed 's/ M //' | sed 's/?? //' | fzf -q "$*")
+  vim $file
+}
