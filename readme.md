@@ -21,6 +21,16 @@
      ████████  ████████  ████████
 
 
+![desktop][./desktop.png]
+
+
+**Wallpaper**: http://www.zastavki.com/pictures/originals/2015/Backgrounds_Totoro__gray_background_104137_.png
+**Terminal**: [Termite](https://github.com/thestinger/termite) with
+[Fish](https://fishshell.com/) / [Oh My
+Fish](https://github.com/oh-my-fish/oh-my-fish),
+[pure](https://github.com/rafaelrinaldi/pure) theme and
+[Roboto](https://www.google.com/fonts/specimen/Roboto) font.
+
 ## Install
 
 This is a backup of my dot/config files. [bin/] directory includes scripts to
