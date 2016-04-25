@@ -1,4 +1,4 @@
-
+#! /usr/bin/bash
 set -e
 
 # Source: https://gist.github.com/davejamesmiller/1965569
@@ -27,15 +27,22 @@ ask() {
 
 dir=`pwd`
 
-if ask "Install symlink for .zshrc?" Y; then
-  ln -sf ${dir}/.zshrc ${HOME}/.zshrc
-  ln -sf ${dir}/.aliases.sh ${HOME}/.aliases.sh
+if ask "Install symlink for .config/fish?" Y; then
+  ln -sfn ${dir}/fish ${HOME}/.config/fish
 fi
 
 if ask "Install symlink for .config/termite?" Y; then
-  ln -sfn ${dir}/.config/termite ${HOME}/.config/termite
+  ln -sfn ${dir}/termite ${HOME}/.config/termite
 fi
 
 if ask "Install symlink for .config/nvim?" Y; then
-  ln -sfn ${dir}/.config/nvim ${HOME}/.config/nvim
+  ln -sfn ${dir}/vim ${HOME}/.config/nvim
+fi
+
+if ask "Install symlink for ~/.vim?" Y; then
+  ln -sfn ${dir}/vim ${HOME}/.vim
+fi
+
+if ask "Install symlink for .gitconfig?" Y; then
+  ln -sfn ${dir}/git/gitconfig.ln ${HOME}/.gitconfig
 fi

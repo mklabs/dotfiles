@@ -6,15 +6,15 @@ browser          = google-chrome
 allow_bold       = true
 allow_italic     = true
 visible_bell     = false
-mouse_autohide   = true
 audible_bell     = false
+mouse_autohide   = true
 
 
 [colors]
 # Base16 Gooey
 # Scheme: Alex Booker <alexbooker@fastmail.im>
 
-foreground      = #d1d4e0
+foreground      = #fefefe
 foreground_bold = #d1d4e0
 cursor          = #d1d4e0
 background      = #101218
