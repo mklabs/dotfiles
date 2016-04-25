@@ -21,10 +21,10 @@
      ████████  ████████  ████████
 
 
-![desktop][./desktop.png]
+![desktop](./desktop.png)
 
 
-**Wallpaper**: http://www.zastavki.com/pictures/originals/2015/Backgrounds_Totoro__gray_background_104137_.png
+**Wallpaper**: [Totoro Gray](http://www.zastavki.com/pictures/originals/2015/Backgrounds_Totoro__gray_background_104137_.png)
 **Terminal**: [Termite](https://github.com/thestinger/termite) with
 [Fish](https://fishshell.com/) / [Oh My
 Fish](https://github.com/oh-my-fish/oh-my-fish),
