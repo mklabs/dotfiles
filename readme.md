@@ -8,35 +8,31 @@ cd ~/.dotfiles
 ./bin/install
 ```
 
-## Overview
+### Distrib
 
-- `*.ln` - Files (folders included) ending with `*.ln` will get symlinked to $HOME directory (such as .ackrc, .bashrc etc.&)
+[bin/distrib dir](bin/distrib) contains installation script for various distribution.
 
-- `.sh` - Any files ending with `.sh` is sourced by either `.bashrc` or `.zshrc`
+They commonly install the following
 
-Using the following snippet
+		gnome 3       - Desktop environment
+    i3-wm         - Windows manager with great customization capability
 
-```sh
-# Load all the `.sh` files in the `.dotfiles` folder
-for i in ~/.dotfiles/**/*.sh; do
-  if [ -e $i ]; then
-    . $i
-  fi
-done
-```
+    termite       - Lightweight, keyboard centric terminal
+    fish          - Awesome little shell like zsh, with great autocompletion feature
+    oh-my-fish    - oh-my-zsh equivalent for fish
 
-### ./install.sh
+    arc theme     - A popular and well designed theme for Gnome
+    flattr icon   - Set of icons for theming gtk
+    Roboto        - The Material Design font for System font
+    Font Awesome  - For the multitude of icons it provides
 
-[install.sh](./install.sh) is script based on [@isaac's dotfiles install script](https://github.com/isaacs/dotfiles/blob/master/install.sh)
+		ag						- A much better version of grep / ack
+		fzf						- fuzzy file finder
+		z							- https://github.com/rupa/z
 
-Will symlink the appropriate files in `.dotfiles` to the home directory.
+    neovim / vim  - Vim is my text editor of choice, neovim if a fork that brings real async I/O and a great terminal emulator.
 
-The install script also clones in `rupa/z` repository, because it is so handy.
+    chrome        - For browsing / frontend dev
 
-### Git template
+    spotify       - To listen for some good music
 
-Git configuration includes a git template to init repositories from
-
-    # init template, change this to your prefered git setup
-    [init]
-      templatedir = ~/.dotfiles/git/templates/default
