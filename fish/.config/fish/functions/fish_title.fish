@@ -1,0 +1,1 @@
+/home/mk/.config/fisherman/pure/fish_title.fish

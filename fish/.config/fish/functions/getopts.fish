@@ -1,0 +1,1 @@
+/home/mk/.config/fisherman/getopts/getopts.fish

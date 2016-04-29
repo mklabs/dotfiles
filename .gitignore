@@ -2,3 +2,4 @@ node_modules
 .vendors
 fish/fish_history
 fish/fishd.manjaro
+vim/
