@@ -1,0 +1,16 @@
+# File created by KDE Gtk Config
+# Configs for GTK2 programs 
+
+include "/usr/share/themes/Paper/gtk-2.0/gtkrc"
+style "user-font" 
+{
+	font_name="Droid Sans Mono"
+}
+widget_class "*" style "user-font"
+gtk-font-name="Droid Sans Mono 14"
+gtk-theme-name="Paper"
+gtk-icon-theme-name="flattr"
+gtk-fallback-icon-theme="paper"
+gtk-toolbar-style=GTK_TOOLBAR_ICONS
+gtk-menu-images=1
+tk-button-images=1

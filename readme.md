@@ -1,97 +1,128 @@
-*dotfiles*
+# :wrench: ~/.config
 
-> Arch Linux Manjaro / Gnome shell / i3wm / Termite / Fish / Oh My Fish / Paper theme / ag, fzf, z ...
-
-     ██████████████████  ████████     mk@manjaro
-     ██████████████████  ████████     OS: Manjaro 15.12 Capella
-     ██████████████████  ████████     Kernel: x86_64 Linux 4.1.21-1-MANJARO
-     ██████████████████  ████████     Uptime: 1h 57m
-     ████████            ████████     Packages: 1294
-     ████████  ████████  ████████     Shell: fish
-     ████████  ████████  ████████     Resolution: 5760x2160
-               ████████  ████████     DE: Gnome
-     ████████  ████████  ████████     WM: GNOME Shell
-     ████████  ████████  ████████     WM Theme: Adwaita
-     ████████  ████████  ████████     GTK Theme: Paper [GTK2/3]
-     ████████  ████████  ████████     Icon Theme: Paper
-     ████████  ████████  ████████     Font: Roboto 11
-     ████████  ████████  ████████     CPU: AMD FX-6300 Six-Core @ 3.5GHz
-     ████████  ████████  ████████     GPU: GeForce GTX 960
-     ████████  ████████  ████████     RAM: 2100MiB / 7872MiB
-     ████████  ████████  ████████
-
-
-![desktop](./desktop.png)
-
-
-**Wallpaper**: [Totoro Gray](http://www.zastavki.com/pictures/originals/2015/Backgrounds_Totoro__gray_background_104137_.png)
-**Terminal**: [Termite](https://github.com/thestinger/termite) with
-[Fish](https://fishshell.com/) / [Oh My
-Fish](https://github.com/oh-my-fish/oh-my-fish),
-[pure](https://github.com/rafaelrinaldi/pure) theme and
-[Roboto](https://www.google.com/fonts/specimen/Roboto) font.
+XDG compatible `.config` files, managed with [GNU stow](http://www.gnu.org/s/stow/).
 
 ## Install
 
-This is a backup of my dot/config files. [bin/] directory includes scripts to
-setup the environment from scratch and can be used to bootstrap a fresh
-installation.
+    $ git clone https://github.com/mklabs/.config.git ~/dotfiles
+    $ cd ~/dotfiles
 
-```sh
-git clone git://github.com/mklabs/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-./install.sh
-```
+Run `make install` or `./install.sh` and answer yes or no to `stow` a
+particular set of config files.
 
-You'll get prompted for each symlink.
+    $ make install
+    Install vim/nvim (https://github.com/mklabs/vimfiles) configuration files? [Y/n]
+    Installing vim/nvim configuration
+    Cloning into 'vim/.vim'...
+    remote: Counting objects: 1012, done.
+    remote: Total 1012 (delta 0), reused 0 (delta 0), pack-reused 1012
+    Receiving objects: 100% (1012/1012), 357.89 KiB | 264.00 KiB/s, done.
+    Resolving deltas: 100% (364/364), done.
+    Checking connectivity... done.
+    Install configuration files fish? [Y/n]
+    LINK: .config/fish/fish.d => ../../src/mklabs/dotfiles/fish/.config/fish/fish.d
+    Install configuration files git? [Y/n]
+    LINK: .config/git => ../src/mklabs/dotfiles/git/.config/git
+    LINK: .gitconfig => src/mklabs/dotfiles/git/.gitconfig
+    Install configuration files gtk? [Y/n]
+    LINK: .gtkrc-2.0-kde4 => src/mklabs/dotfiles/gtk/.gtkrc-2.0-kde4
+    LINK: .config/gtk-3.0/settings.ini => ../../src/mklabs/dotfiles/gtk/.config/gtk-3.0/settings.ini
+    LINK: .gtkrc-2.0 => src/mklabs/dotfiles/gtk/.gtkrc-2.0
+    Install configuration files i3? [Y/n]
+    LINK: .config/i3 => ../src/mklabs/dotfiles/i3/.config/i3
+    Install configuration files i3blocks? [Y/n]
+    LINK: .config/i3blocks => ../src/mklabs/dotfiles/i3blocks/.config/i3blocks
+    Install configuration files nyaovim? [Y/n]
+    LINK: .config/nyaovim/nyaovimrc.html => ../../src/mklabs/dotfiles/nyaovim/.config/nyaovim/nyaovimrc.html
+    Install configuration files termite? [Y/n]
+    LINK: .config/termite => ../src/mklabs/dotfiles/termite/.config/termite
+    Install configuration files vim? [Y/n]
+    LINK: .config/nvim => ../src/mklabs/dotfiles/vim/.config/nvim
+    Install configuration files wallpapers? [Y/n]
+    LINK: .config/wallpapers => ../src/mklabs/dotfiles/wallpapers/.config/wallpapers
+    Install configuration files X11? [Y/n]
+    LINK: .xinitrc => src/mklabs/dotfiles/X11/.xinitrc
 
-### Overview
+**Uninstall**: Run `make uninstall` to unstow everything. Alternatively, you
+can `stow -v -t $HOME -D thing` to unstow a particular thing.
 
-- **config/** files are loaded on shell startup
-- **bin/** Install scripts
-- Every other folder gets symlinked to ~/.config (termite -> ~/.config/termite)
-- install.sh asks for each symlinks before doing so
+## XDG
 
-### Distrib
+Most of the configuration files are stored in the `~/.config` directory, instead of `$HOME`.
 
-[bin/distrib dir](bin/distrib) contains installation script for various
-distribution. It goes a little bit beyond the idea of dotfiles, and setup a new
-fresh distrib with all the softwares that I use, going from desktop
-environment, display manager to theme and terminal.
+## Stow
 
-To run an install script, simply execute the according file for the platform:
+[GNU Stow](http://www.gnu.org/s/stow) is used to manage the installation of configuration files.
 
-    $ ./bin/manjaro
+> GNU Stow is a symlink farm manager which takes distinct packages of software
+> and/or data located in separate directories on the filesystem, and makes them
+> appear to be installed in the same place.
 
-They commonly install the following
+> This is particularly useful for keeping track of system-wide and per-user
+> installations of software built from source, but can also facilitate a more
+> controlled approach to management of configuration files in the user's home
+> directory, especially when coupled with version control systems.
 
-		gnome 3       - Desktop environment
-    i3-wm         - Windows manager with great customization capability
+    $ stow fish
+    $ stow git
 
-    termite       - Lightweight, keyboard centric terminal
-    fish          - Awesome little shell like zsh, with great autocompletion feature
-    oh-my-fish    - oh-my-zsh equivalent for fish
+## Overview
 
-    arc theme     - A popular and well designed theme for Gnome
-    flattr icon   - Set of icons for theming gtk
-    Roboto        - The Material Design font for System font
-    Font Awesome  - For the multitude of icons it provides
+### Fish
 
-		ag						- A much better version of grep / ack
-		fzf						- fuzzy file finder
-		z							- https://github.com/rupa/z
+- `~/.config/fish/fish.d/alias.sh` - Defines few alias for git, ls, vim and docker.
 
-    neovim / vim  - Vim is my text editor of choice, neovim if a fork that brings real async I/O and a great terminal emulator.
+- `~/.config/fish/fish.d/fzf.sh` - Defines functions to use fzf in specific
+  directories like `~/dotfiles` and `~/.vim`, or specific context like `git status`.
 
-    chrome        - For browsing / frontend dev
+- `~/.config/fish/fish.d/nvm.sh` - Function and alias to source nvm bash script
+  using Bass.
 
-    spotify       - To listen for some good music
+### Git
 
-I recently switched from Ubuntu gnome to Manjaro. The ubuntu script may be a bit behind.
+- `~/.gitconfig` - General configuration for git, including author information
+  (me), git init template, aliases and colors.
 
----
+- `~/.config/git/teamplates` - Git template to init repo from (includes hooks /
+  exclude attributes)
 
-**todos**
+### Gtk
 
-- rofi / compiz
-- i3wm config
+Configuration files for both gtk-2.0 and gtk-3.0. It configures the
+environement to use Paper theme, with Flattr icons and Paper icon as a
+fallback.
+
+Font used is Droid Sans Mono 14px
+
+### i3
+
+Configuration file for i3, based and inspired by [@alexbooker
+screencasts](https://youtu.be/ARKIwOlazKI?list=PL5ze0DjYv5DbCv9vNEzFmP6sU7ZmkGzcf)
+
+### i3blocks
+
+Configuration file for i3blocks, including scripts in `~/.config/i3blocks/scripts`.
+
+A very simple status bar with:
+
+- Disk usage
+- Load avergae
+- Date and time
+
+### nyaovim
+
+Gui font configuration for nyaovim, a GUI for nvim built on Electron.
+
+### termite
+
+Terminal configuration for Termite, with font set to `Droid Sans Mono 14` and
+OceanicNext theme, using
+[base16-builder](https://github.com/base16-builder/base16-builder) to generate
+the theme.
+
+### wallpapers
+
+`~/.config/wallpapers` is used by `feh` in i3 config file to randomly pick a
+png or jpg file to set as background on login or i3 reload.
+
+This includes a list of https://www.reddit.com/r/wallpapers wallpapers

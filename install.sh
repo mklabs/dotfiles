@@ -1,6 +1,8 @@
 #! /usr/bin/bash
 set -e
 
+dir=`pwd`
+
 # Source: https://gist.github.com/davejamesmiller/1965569
 ask() {
   while true; do
@@ -25,24 +27,22 @@ ask() {
   done
 }
 
-dir=`pwd`
 
-if ask "Install symlink for .config/fish?" Y; then
-  ln -sfn ${dir}/fish ${HOME}/.config/fish
+if [ -d vim ]; then
+  echo "Skipping vim install"
+else
+  if ask "Install vim/nvim (https://github.com/mklabs/vimfiles) configuration files?" Y; then
+    echo "Installing vim/nvim configuration"
+    mkdir -p vim/.config
+    git clone https://github.com/mklabs/vimfiles.git vim/.vim
+    ln -s $dir/.vim $dir/vim/.config/nvim
+  fi
 fi
 
-if ask "Install symlink for .config/termite?" Y; then
-  ln -sfn ${dir}/termite ${HOME}/.config/termite
-fi
-
-if ask "Install symlink for .config/nvim?" Y; then
-  ln -sfn ${dir}/vim ${HOME}/.config/nvim
-fi
-
-if ask "Install symlink for ~/.vim?" Y; then
-  ln -sfn ${dir}/vim ${HOME}/.vim
-fi
-
-if ask "Install symlink for .gitconfig?" Y; then
-  ln -sfn ${dir}/git/gitconfig.ln ${HOME}/.gitconfig
-fi
+for file in $(ls); do
+  if [ -d $file ]; then
+    if ask "Install configuration files $file?" Y; then
+      stow $file -t $HOME -v
+    fi
+  fi
+done

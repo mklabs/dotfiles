@@ -1,0 +1,269 @@
+# i3 config file (v4)
+
+# ## Variables
+
+set $mod Mod4
+
+set $workspace1   ""
+set $workspace2   ""
+set $workspace3   ""
+set $workspace4   ""
+set $workspace5   ""
+set $workspace6   ""
+set $workspace7   ""
+set $workspace8   ""
+set $workspace9   ""
+set $workspace10  ""
+
+set $bgtitle #dedede
+set $bgtitle_accent #cdcdcd
+
+# Borrowed to github.com/alexbooker/dotfiles
+set $base00 #101218
+set $base01 #1f222d
+set $base02 #252936
+set $base03 #7780a1
+set $base04 #C0C5CE
+set $base05 #d1d4e0
+set $base06 #C9CCDB
+set $base07 #ffffff
+set $base08 #ee829f
+set $base09 #f99170
+set $base0A #ffefcc
+set $base0B #a5ffe1
+set $base0C #97e0ff
+set $base0D #97bbf7
+set $base0E #c0b7f9
+set $base0F #fcc09e
+
+# scale up display
+exec xrandr -dpi 150
+
+# Randomize wallpaper on each login / reload
+exec_always feh --randomize --bg-scale ~/.config/wallpapers/**.{png,jpg}
+
+# ## Program Bindings
+bindsym $mod+space                exec rofi -show run
+bindsym $mod+n                    exec termite -e 'fish -c "nvim"'
+bindsym $mod+t                    exec fish -c'nyaovim'
+
+# bindsym $mod+f                    exec firefox
+bindsym $mod+e                    exec thunar
+bindsym $mod+o                    exec google-chrome-stable
+
+# ## Program Workspaces
+assign [class="Termite"]          $workspace1
+assign [class="Nyaovim"]          $workspace1
+assign [class="google-chrome"]    $workspace2
+assign [class="Firefox"]          $workspace2
+assign [class="Spotify"]          $workspace10
+
+# Disable Chrome / Firefox / Terminal title
+# for_window [class="^google-chrome$"]  border pixel 1
+for_window [class="^Firefox$"]        border pixel 1
+for_window [class="^google-chrome$"]  border pixel 1
+for_window [class="^Termite$"]        border normal 1
+
+# Floating / Fullscreen
+for_window [class="Lxappearance"]     floating enable
+for_window [class="Thunar"]           floating enable
+for_window [class="NyaoVim"]          floating enable
+
+# ## Mouse bindings
+
+# The middle button over a titlebar kills the window
+bindsym --release button2 kill
+
+# The middle button and a modifer over any part of the window kills the window
+bindsym --whole-window $mod+button2 kill
+
+# The right button toggles floating
+bindsym button3       floating toggle
+bindsym $mod+button3  floating toggle
+bindsym $mod+button1  fullscreen toggle
+# bindsym $mod+button1  focus mode_toggle
+
+# ## General configuration
+
+for_window [class="NyaoVim|Termite"]        title_format "  %title"
+
+floating_minimum_size 1680 x 950
+
+# EN: set $semicolon semicolon
+set $semicolon m
+
+# Fonts
+font pango: Droid Sans Mono 24
+
+# ## System Bindings
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# start a terminal
+# bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec termite
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# start dmenu (a program launcher)
+bindsym $mod+d exec rofi -show run
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+$semicolon focus right
+
+bindsym Mod1+Tab focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+$semicolon move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+Shift+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+# bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+# bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+#bindsym $mod+d focus child
+
+# ## Workspaces Bindings
+
+# switch to workspace
+bindsym $mod+1 workspace $workspace1
+bindsym $mod+2 workspace $workspace2
+bindsym $mod+3 workspace $workspace10
+bindsym $mod+9 workspace $workspace9
+bindsym $mod+0 workspace $workspace10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $workspace1
+bindsym $mod+Shift+2 move container to workspace $workspace2
+bindsym $mod+Shift+3 move container to workspace $workspace10
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace $workspace9
+bindsym $mod+Shift+0 move container to workspace $workspace10
+
+# ## Themes               border    background  text      indicator
+client.focused            #586e75   #dedede     #   #268bd2
+client.focused_inactive   #073642   #ededed     #93a1a1   #002b36
+client.unfocused          #002b36   #002b36     #586e75   #002b36
+client.urgent             #dc322f   #dc322f     #fdf6e3   #dc322f
+
+# ## Status Bar
+bar {
+  output DP-0
+  font pango: Droid Sans Mono, FontAwesome 24
+  status_command i3blocks
+  position bottom
+
+  # strip_workspace_numbers yes
+  # height 25
+
+  colors {
+    separator           $base03
+    background          $base01
+    statusline          $base05
+
+    #                  border  background text
+    focused_workspace  $base01 $base01    $base07
+    active_workspace   $base01 $base02    $base03
+    inactive_workspace $base01 $base01    $base03
+    urgent_workspace   $base01 $base01    $base08
+  }
+
+}
+
+# laptop monitor: bright colors and i3status with less modules.
+bar {
+  output DVI-I-0
+  status_command i3blocks -c ~/.config/i3blocks/small.conf
+  font pango: Droid Sans Mono, FontAwesome 12
+  # position top
+
+  colors {
+    separator           $base03
+    background          $base01
+    statusline          $base05
+
+    #                  border  background text
+    focused_workspace  $base01 $base01    $base07
+    active_workspace   $base01 $base02    $base03
+    inactive_workspace $base01 $base01    $base03
+    urgent_workspace   $base01 $base01    $base08
+  }
+}
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+  # These bindings trigger as soon as you enter the resize mode
+
+  # Pressing left will shrink the window’s width.
+  # Pressing right will grow the window’s width.
+  # Pressing up will shrink the window’s height.
+  # Pressing down will grow the window’s height.
+  bindsym j resize shrink width 10 px or 10 ppt
+  bindsym k resize grow height 10 px or 10 ppt
+  bindsym l resize shrink height 10 px or 10 ppt
+  bindsym $semicolon resize grow width 10 px or 10 ppt
+
+  # same bindings, but for the arrow keys
+  bindsym Left resize shrink width 10 px or 10 ppt
+  bindsym Down resize grow height 10 px or 10 ppt
+  bindsym Up resize shrink height 10 px or 10 ppt
+  bindsym Right resize grow width 10 px or 10 ppt
+
+  # back to normal: Enter or Escape
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize
+# bindsym $mod+Shift+space focus mode_toggle

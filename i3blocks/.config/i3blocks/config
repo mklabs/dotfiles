@@ -1,0 +1,38 @@
+markup=pango
+full_text=  
+align=center
+color=#bada55
+separator=false
+separator_block_width=3
+
+#[separator]
+
+[disk]
+command=~/.config/i3blocks/scripts/disk
+interval=1
+label=
+color=#C9CCDB
+
+[separator]
+
+[load]
+command=~/.config/i3blocks/scripts/load_average
+interval=1
+label=
+color=#C9CCDB
+
+[separator]
+
+[date]
+command=echo "`date +'%a %d %b'`"
+interval=1
+#label=
+color=#C9CCDB
+
+[separator]
+
+[time]
+command=echo "`date +'%H:%M'`"
+interval=1
+label=
+color=#C9CCDB

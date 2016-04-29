@@ -1,3 +1,0 @@
-# Clone and install z
-[ -e .vendors/z/ ] || git clone https://github.com/rupa/z.git ~/.dotfiles/.vendors/z
-

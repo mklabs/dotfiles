@@ -1,4 +1,0 @@
-# Chrome
-[ -e .vendors/chrome-stable.deb ] || wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O .vendors/chrome-stable.deb
-sudo apt-get install -y libindicator7 libappindicator1
-sudo dpkg -i ./.vendors/chrome-stable.deb
