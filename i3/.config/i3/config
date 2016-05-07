@@ -199,7 +199,7 @@ client.urgent             #dc322f   #dc322f     #fdf6e3   #dc322f
 
 # ## Status Bar
 bar {
-  output DP-0
+  # output DP-0
   font pango: Droid Sans Mono, FontAwesome 24
   status_command i3blocks
   position bottom
@@ -222,24 +222,24 @@ bar {
 }
 
 # laptop monitor: bright colors and i3status with less modules.
-bar {
-  output DVI-I-0
-  status_command i3blocks -c ~/.config/i3blocks/small.conf
-  font pango: Droid Sans Mono, FontAwesome 12
-  # position top
-
-  colors {
-    separator           $base03
-    background          $base01
-    statusline          $base05
-
-    #                  border  background text
-    focused_workspace  $base01 $base01    $base07
-    active_workspace   $base01 $base02    $base03
-    inactive_workspace $base01 $base01    $base03
-    urgent_workspace   $base01 $base01    $base08
-  }
-}
+# bar {
+#   output DVI-I-0
+#   status_command i3blocks -c ~/.config/i3blocks/small.conf
+#   font pango: Droid Sans Mono, FontAwesome 12
+#   # position top
+# 
+#   colors {
+#     separator           $base03
+#     background          $base01
+#     statusline          $base05
+# 
+#     #                  border  background text
+#     focused_workspace  $base01 $base01    $base07
+#     active_workspace   $base01 $base02    $base03
+#     inactive_workspace $base01 $base01    $base03
+#     urgent_workspace   $base01 $base01    $base08
+#   }
+# }
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
