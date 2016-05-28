@@ -6,7 +6,7 @@ alias tm  "top -o vsize" # memory
 alias g   "git status -s"
 
 # ls aliases
-alias ls  "ls -hF"
+alias ls  "ls -hF -la"
 alias ll  "ls -lhF"
 alias la  "ls -la"
 alias l   "ls -lAhF"
@@ -17,3 +17,8 @@ alias n   "nvim"
 
 # docker
 alias docker "sudo docker"
+
+# npm
+alias ni  "npm i    --cache-min Infinity"
+alias nis "npm i -S --cache-min Infinity"
+alias nid "npm i -D --cache-min Infinity"

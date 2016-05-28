@@ -1,5 +1,5 @@
 [options]
-font             = Droid Sans Mono 14
+font             = Droid Sans Mono 22
 scrollback_lines = 10000
 clickable_url    = true
 browser          = google-chrome
