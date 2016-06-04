@@ -1,11 +1,16 @@
-# :wrench: ~/.config
+# dotfiles
 
-XDG compatible `.config` files, managed with [GNU stow](http://www.gnu.org/s/stow/).
+XDG compatible `.config` files, managed with [GNU stow](http://www.gnu.org/s/stow/)
 
 ## Install
 
-    $ git clone https://github.com/mklabs/.config.git ~/dotfiles
+    $ git clone https://github.com/mklabs/dotfiles.git ~/dotfiles
     $ cd ~/dotfiles
+    
+Note that stow is really good at linking stuff. That's its only job (like all good unix tools). You can clone it anywhere you want, cd into the destination and run `stow *`.
+
+     $ git clone https://github.com/mklabs/dotfiles ~/dev/dotfiles
+    
 
 Run `make install` or `./install.sh` and answer yes or no to `stow` a
 particular set of config files.
@@ -109,10 +114,6 @@ A very simple status bar with:
 - Load avergae
 - Date and time
 
-### nyaovim
-
-Gui font configuration for nyaovim, a GUI for nvim built on Electron.
-
 ### termite
 
 Terminal configuration for Termite, with font set to `Droid Sans Mono 14` and
@@ -125,4 +126,8 @@ the theme.
 `~/.config/wallpapers` is used by `feh` in i3 config file to randomly pick a
 png or jpg file to set as background on login or i3 reload.
 
-This includes a list of https://www.reddit.com/r/wallpapers wallpapers
+This includes a list of https://www.reddit.com/r/wallpapers wallpapers (removed to keep the repo small, lfs is cool but  I need to configure it propetly)
+
+---
+
+> ~
