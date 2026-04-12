@@ -1,62 +1,49 @@
-# PowerShell Profile
+# zsh Profile
 
-Personal PowerShell configuration with autoload scripts, aliases, completions, and utility functions.
+Personal zsh configuration for macOS with Starship prompt, fzf, and utility functions.
 
-## Quick Start
+## Setup
 
-1. **Clone repository**: `git clone -b windows https://github.com/mklabs/dotfiles.git ~/Documents/PowerShell`
-2. **Debug loading**: Set `$env:DEBUG_PWSH=1` to see load times for each script (optional)
+1. Install dependencies via Homebrew:
+   ```
+   brew install starship fzf zsh-autosuggestions zsh-syntax-highlighting eza yazi caarlos0/tap/timer terminal-notifier zoxide
+   ```
+
+2. Clone to `~/.dotfiles` and symlink:
+   ```
+   git clone -b osx https://github.com/mklabs/dotfiles.git ~/.dotfiles
+   ln -s ~/.dotfiles/.zshrc ~/.zshrc
+   ```
 
 ## Structure
 
-Scripts are automatically loaded via `Microsoft.PowerShell_profile.ps1`. To add new scripts, simply create a new `.ps1` file in the appropriate directory based on the desired loading time.
+```
+autoload/
+├── init/        # Core init: Starship, fzf, yazi
+├── completions/ # Tab completion definitions
+├── utils/       # Utility functions (htmlq, pomodoro, nvim)
+└── after/       # Post-init: zoxide, aliases
+```
 
-| Directory | Purpose |
-|-----------|---------|
-| `autoload/init/` | Initialization (prompt, modules, tools) |
-| `autoload/completions/` | Tab completion definitions |
-| `autoload/utils/` | Utility functions and aliases |
-| `autoload/after/` | Post-initialization (aliases, settings) |
-
-Workflow:
-
-- Edit scripts in appropriate `autoload/` subdirectory
-- Changes take effect on next shell startup or after sourcing
-
-## Key Commands
-
-| Command | Description |
-|---------|-------------|
-| `l`, `ll`, `lll`, `tree` | eza-based listings |
-| `tapo [light\|tv] <cmd>` | Control Tapo/Kasa devices |
-| `bulb <cmd>` | Light shortcuts (toggle, on, off, dimm, brighten) |
-| `nvim` | Neovim editor |
-| `lg` | lazygit |
-| `z <dir>` | zoxide smart cd |
-| `occ`, `ocm`, `cmo` | Commit message helpers via opencode |
-
-## Dependencies
-
-External tools required:
-- **Starship** - Shell prompt
-- **PSFzf** - Fuzzy finder (`Ctrl+f`, `Ctrl+r`)
-- **Terminal-Icons** - File icons
-- **posh-git** - Git status
-- **BurntToast** - Toast notifications
-- **eza** - Modern `ls` replacement
-- **zoxide** - Smart directory jumping
-- **kasa** - Tapo device control
+Scripts load automatically from `.zshrc`.
 
 ## Debugging
 
-Set debug mode for load timing:
-
-```powershell
-$env:DEBUG_PWSH=1
+```zsh
+DEBUG_ZSH=1  # See load times for each script
+. ~/.zshrc   # Source to reload
 ```
 
-## Tapo Notes
+## Key Tools
 
-- Set `KASA_USERNAME` and `KASA_PASSWORD` environment variables for Tapo/Kasa device control
-- Add to your profile: `$env:KASA_USERNAME="your-email"` and `$env:KASA_PASSWORD="your-password"`
+- **Starship** - Cross-shell prompt
+- **fzf** - `Ctrl+f` (files), `Ctrl+r` (history)
+- **yazi** - `y` command for file manager with cwd sync
+- **eza** - `ls` replacement
+- **timer** - Pomodoro timer with notifications
+- **zoxide** - `z` for smart directory jumping
 
+## macOS-Specific
+
+- Clipboard: `pbcopy`, `pbpaste`
+- Notifications: `terminal-notifier`
