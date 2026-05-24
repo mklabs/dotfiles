@@ -1,17 +1,17 @@
 # Commit message helpers
 
 occ() {
-  echo "Running: git wt step commit --show-prompt | opencode run --agent plan"
-  git wt step commit --show-prompt | opencode run --agent plan
+  echo "Running: wt step commit --show-prompt | opencode run --agent plan"
+  wt step commit --show-prompt | opencode run --agent plan
 }
 
 llmc() {
-  echo "Running: git wt step commit --show-prompt | llm"
-  git wt step commit --show-prompt | llm
+  echo "Running: wt step commit --show-prompt | llm"
+  wt step commit --show-prompt | llm
 }
 
 ocm() {
-  git wt step commit --show-prompt | opencode run --agent plan | git commit --file -
+  wt step commit --show-prompt | opencode run --agent plan | git commit --file -
 }
 
 cm() {
