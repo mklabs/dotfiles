@@ -82,3 +82,12 @@ cmo() {
   echo "Running: cm | opencode run --agent plan"
   cm | opencode run --agent plan
 }
+
+cmms() {
+  local ocprompt
+
+  ocprompt="Write a commit message for the git staged changes. Concise commit message with small commit body describing the most important changes."
+
+  echo "Running: opencode run --agent plan --prompt \"$ocprompt\""
+  opencode --agent plan --prompt "$ocprompt"
+}
