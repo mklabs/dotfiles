@@ -164,6 +164,13 @@ function cmms {
   opencode --agent plan --prompt "$prompt"
 }
 
+function cmmr {
+  $prompt = "/review Review and write a commit message for the git staged changes. Concise commit message with small commit body describing the most important changes."
+
+  Write-Error 'Running: opencode run --agent plan --prompt "$prompt"'
+  opencode --agent plan --prompt "$prompt"
+}
+
 function oc-help {
   bat "$PSScriptRoot\opencode.ps1" -r :50
 }
