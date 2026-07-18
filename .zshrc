@@ -6,6 +6,7 @@ script_dir="$HOME/.dotfiles"
 
 directories=(
   'autoload/init'
+  'autoload/priv'
   'autoload/completions'
   'autoload/utils'
   'autoload/after'
