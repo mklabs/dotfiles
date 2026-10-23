@@ -1,110 +1,51 @@
-# AGENTS.md - PowerShell Profile Repository Guidelines
+# AGENTS.md
 
-## Overview
-This repository contains a PowerShell profile configuration with autoload scripts, aliases, completions, and utility functions. It is not a traditional software project with build/test commands.
+## What this repo is
 
-## Structure
-```
-autoload/
-├── init/       # Initialization scripts (prompt, modules, tools)
-├── completions/ # Tab completion definitions for various tools
-├── utils/       # Utility functions and aliases
-└── after/       # Post-initialization configuration (aliases, settings)
+Personal PowerShell 7 profile. The repo is cloned **directly into `~/Documents/PowerShell`** (the live PowerShell user directory), on branch `windows` of `mklabs/dotfiles`. Consequences:
 
-Microsoft.PowerShell_profile.ps1  # Main profile entry point
-powershell.config.json           # PowerShell execution policy config
-```
+- `Modules/` is the real user module path — posh-git, PSFzf, Terminal-Icons, BurntToast, DockerCompletion, etc. are **vendored here**, which is why `Import-Module Terminal-Icons` works with no path. Don't tell the user to `Install-Module` these; update the vendored copy.
+- `Scripts/` is the live user scripts path (currently only `InstalledScriptInfos/`).
+- Changes to any file take effect in the user's actual shell on next startup — test carefully.
 
-## Loading Scripts
-Scripts are automatically loaded via `Microsoft.PowerShell_profile.ps1`:
-- All `.ps1` files in `autoload/init/`
-- All `.ps1` files in `autoload/completions/`
-- All `.ps1` files in `autoload/utils/`
-- All `.ps1` files in `autoload/after/`
+## How loading works
 
-Debug mode: Set `$env:DEBUG_PWSH=1` to see load times for each script.
+`Microsoft.PowerShell_profile.ps1` dot-sources every `.ps1` in these directories, **in this order**:
 
-## Code Style Guidelines
+1. `autoload/init/` — modules, prompt (starship), PSReadLine, tool init
+2. `autoload/completions/`
+3. `autoload/utils/` — functions
+4. `autoload/after/` — aliases and overrides
 
-### Function Naming
-- Use lowercase with hyphens or camelCase (e.g., `bbtop`, `tapo`, `Invoke-Starship`)
-- Utility functions should be concise and descriptive
-- Follow existing conventions in the repository
+Order matters: `after/alias.ps1` does `Set-Alias ls lls` where `lls` is defined in `utils/eza.ps1`. Put new scripts in the directory matching when they must run.
 
-### Script Structure
-- Start with a comment header describing the tool/purpose
-- Include upstream URLs in comments where applicable (e.g., https://starship.rs)
-- Keep scripts focused and single-purpose
-- Use `@args` for forwarding arguments to underlying commands
+## Testing / debugging
 
-### Error Handling
-- Use `Write-Error` for error messages
-- Return early with `return` after errors
-- Check path existence with `Test-Path` before using paths
-- Validate parameters before execution
+No build, lint, or test framework. Verify changes by:
 
-### Variables
-- Use `$env:` for environment variables
-- Use `$args` for automatic argument array
-- Use `$PSScriptRoot` for script-relative paths
-- Declare parameters explicitly with `[string]`, `[int]`, etc. when type matters
+- Starting a new `pwsh` session, or dot-sourcing the single file: `. .\autoload\utils\foo.ps1`
+- `$env:DEBUG_PWSH=1` before startup prints per-script load timings
 
-### Formatting
-- 2-space indentation (PowerShell convention)
-- Empty lines between logical sections
-- Comments on separate lines, not trailing
-- Quoted strings consistently (single quotes preferred unless interpolation needed)
+## Conventions
 
-### Modules and Imports
-- Import modules at the top of init scripts
-- Check module availability before use when appropriate
-- Use `Import-Module` for PowerShell modules
-- Dot-source utility scripts with `. $Path` pattern
+- 2-space indent; comment header per file with upstream URL (e.g. `# https://starship.rs`); wrapper functions forward with `@args`; validate then `return` early.
+- Function names are lowercase single words (`lls`, `quake`, `tapo`) or lowercase-hyphenated (`oc-help`, `Invoke-Starship-PreCommand` for starship hooks).
+- **`Write-Error` is used intentionally for status/info output** in `autoload/utils/opencode.ps1` — it keeps stdout clean because these helpers pipe into `git commit --file -`. Do not "fix" these to `Write-Host`.
+- `autoload/utils/opencode-history.ps1` provides `och` (fuzzy-search opencode prompt history) and binds `Ctrl+O` via `Set-PSReadLineKeyHandler` — history lives in `~/.local/state/opencode/prompt-history.jsonl`.
+- `COMMANDS.md` at the repo root is the single source of truth for available commands. **Any change that adds, removes, or alters a function, alias, or key binding must update `COMMANDS.md` in the same change.** `dotfiles-command` (defined in `autoload/utils/dotfiles-help.ps1`) renders it as runtime help via `glow`; `dotfiles-help` parses the same file to print a compact command list (`-c` groups by category).
+- Keep the header comment block at the top of `autoload/utils/opencode.ps1` accurate: `oc-help` displays lines 1–50 of that file as runtime help via `bat`.
+- `autoload/utils/bat.ps1` removes the built-in `cat` alias before defining a `cat` function — follow that pattern when overriding an existing alias.
+
+## Interactive shell quirks (relevant when verifying)
+
+The loaded shell is heavily remapped: `cd` → zoxide's `z`, `ls` → eza-based `lls`, `cat` → `bat -pp`, `grep` → `findstr`, `open` → `start`. Don't rely on stock cmdlet behavior in an interactive session.
 
 ## Dependencies
-This profile uses external tools/modules:
-- **Starship** - Cross-shell prompt
-- **PSFzf** - Fuzzy finder integration
-- **Terminal-Icons** - File icons in listings
-- **posh-git** - Git status in prompt/completions
-- **BurntToast** - Windows toast notifications
-- **eza** (external binary) - Modern `ls` replacement
 
-## Testing
-No formal test framework exists. Manual testing approach:
-1. Start a new PowerShell session to load the profile
-2. Source individual scripts with `. script.ps1` for debugging
-3. Use `$env:DEBUG_PWSH=1` to measure load performance
-4. Test functions interactively in the shell
+- PowerShell modules: vendored in `Modules/` (see above).
+- External binaries assumed on PATH: starship, eza, zoxide, bat, fzf, lazygit, nvim, `kasa` (python-tapo).
+- `tapo` requires `$env:KASA_USERNAME` / `$env:KASA_PASSWORD`.
 
-## Common Patterns
+## Commits
 
-### Function forwarding
-```powershell
-function mycmd {
-    & $tool @args
-}
-```
-
-### Path validation
-```powershell
-if (Test-Path $path) {
-    & $path @args
-} else {
-    Write-Error "Not found: $path"
-    return
-}
-```
-
-### Parameter handling
-```powershell
-function cmd {
-  param ([string]$Opt = "")
-  # ... logic
-}
-```
-
-## Git Workflow
-- Commit changes to specific autoload subdirectories
-- Use descriptive commit messages explaining the change
-- No PRs typically needed for personal profile updates
+Conventional-commit style, scope = autoload area or script name, e.g. `utils(ffmpeg): add ffc helper`, `completions: add just tab completion`, `opencode: cmmr function`. No PRs — commit directly to `windows`.
