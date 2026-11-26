@@ -23,6 +23,7 @@ Import-Module Terminal-Icons
 
 # PSReadLine
 # https://github.com/PowerShell/PSReadLine
+Set-PSReadLineOption -EditMode Emacs
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle ListView
 
