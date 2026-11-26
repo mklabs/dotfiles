@@ -135,3 +135,4 @@ Requires `$env:KASA_USERNAME` and `$env:KASA_PASSWORD`.
 - **Starship** prompt with Windows Terminal same-directory integration (`Invoke-Starship-PreCommand`) — `init/prompt.ps1`
 - **Terminal-Icons** file/type icons — `init/prompt.ps1`
 - **PSReadLine** history prediction (ListView) — `init/prompt.ps1`
+- **just `try` integration** — runs `just --justfile E:/Projects/Temp/temp/justfile try init --powershell` at startup — `utils/try.ps1`
