@@ -15,3 +15,6 @@ Set-Alias ls lls
 
 # lazygit
 Set-Alias lg lazygit
+
+# opencode
+Set-Alias oc opencode

@@ -108,6 +108,7 @@ Requires `$env:KASA_USERNAME` and `$env:KASA_PASSWORD`.
 | `f` | `floatingterm` |
 | `ls` | `lls` |
 | `lg` | `lazygit` |
+| `oc` | `opencode` |
 | `cd` | `z` (zoxide) |
 
 ## Key bindings
