@@ -34,6 +34,7 @@ Workflow:
 | `lg` | lazygit |
 | `z <dir>` | zoxide smart cd |
 | `occ`, `ocm`, `cmo` | Commit message helpers via opencode |
+| `och` | Fuzzy-search opencode prompt history (`Ctrl+O` in the prompt) |
 
 ## Dependencies
 
