@@ -34,15 +34,11 @@ Everything this PowerShell profile adds: functions, aliases, key bindings, and t
 |---------|-------------|--------|
 | `g` | `git` | `after/alias.ps1` |
 | `lg` | `lazygit` | `after/alias.ps1` |
-| `occ` | Commit message via `git wt step commit --show-prompt \| opencode run --agent plan` | `utils/opencode.ps1` |
-| `llmc` | Commit message via `git wt step commit --show-prompt \| llm` | `utils/opencode.ps1` |
-| `ocm` | Generate commit message with opencode **and** commit it (`git commit --file -`) | `utils/opencode.ps1` |
-| `cm` | Build a detailed diff/diffstat/status prompt to stdout (no AI call; pipe it yourself) | `utils/opencode.ps1` |
-| `cmo` | `cm \| opencode run --agent plan` | `utils/opencode.ps1` |
-| `cmm` | Quick commit message (staged or unstaged changes) via `opencode run --agent plan` | `utils/opencode.ps1` |
-| `cmms` | Quick commit message (staged changes only) via `opencode run --agent plan` | `utils/opencode.ps1` |
-| `cmmr` | `/review`-based commit message for staged changes via `opencode run --agent plan` | `utils/opencode.ps1` |
-| `oc-help` | Show the `opencode.ps1` header (lines 1–57) via `bat` | `utils/opencode.ps1` |
+| `cmm` | Commit message for staged changes (unstaged if none staged) via `opencode mini --agent plan` | `utils/opencode.ps1` |
+| `cmmr` | Same as `cmm`, prefixed with `/review` so the agent reviews first | `utils/opencode.ps1` |
+| `cmtui` | Prefill the opencode TUI with a commit-message prompt (`opencode --prompt`) | `utils/opencode.ps1` |
+| `cmtuir` | Same as `cmtui`, prefixed with `/review` | `utils/opencode.ps1` |
+| `oc-help` | Show the `opencode.ps1` header (lines 1–23) via `bat` | `utils/opencode.ps1` |
 | `och` | Fuzzy-search opencode prompt history with fzf (`-Copy` copies, `-Query` seeds, `-NoShell` hides shell entries) | `utils/opencode-history.ps1` |
 
 ## Editors
