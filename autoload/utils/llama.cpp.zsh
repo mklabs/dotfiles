@@ -1,8 +1,19 @@
 llama-qwen() {
   echo "Running llama.cpp with the following command:\n"
-  echo "llama-server -hf unsloth/Qwen3.6-35B-A3B-GGUF -c 262144 --host 0.0.0.0 --port 8080\n\n"
+  echo "llama-server -hf unsloth/Qwen3.6-35B-A3B-GGUF -c 262144 --host 0.0.0.0 --port 8080 ...\n\n"
   echo "------------"
-  llama-server -hf unsloth/Qwen3.6-35B-A3B-GGUF -c 262144 --host 0.0.0.0 --port 8080
+  llama-server \
+      -hf unsloth/Qwen3.6-35B-A3B-GGUF \
+      --temp 0.6 \
+      --top-p 0.95 \
+      --top-k 20 \
+      --presence-penalty 0.0 \
+      --min-p 0.00 \
+      -c 262144 \
+      --host 0.0.0.0 \
+      --port 8080 \
+      --parallel 1 \
+      --image-min-tokens 1024
 }
 
 llama-Qwen3.6-27B-GGUF:UD-Q8_K_XL() {
@@ -141,4 +152,34 @@ llama-test-code-np2() {
       --host 0.0.0.0 \
       --port 8080 \
       --parallel 2
+}
+
+llama-test-code-np1() {
+
+  echo "Running llama.cpp with the following command:\n"
+  echo "
+  llama-server \
+      -hf unsloth/Qwen3.6-27B-GGUF:UD-Q4_K_XL \
+      --temp 0.6 \
+      --top-p 0.95 \
+      --top-k 20 \
+      --presence-penalty 0.0 \
+      --min-p 0.00 \
+      -c 262144 \
+      --host 0.0.0.0 \
+      --port 8080 \
+      --parallel 2"
+  echo "------------"
+
+  llama-server \
+      -hf unsloth/Qwen3.6-27B-GGUF:UD-Q4_K_XL \
+      --temp 0.6 \
+      --top-p 0.95 \
+      --top-k 20 \
+      --presence-penalty 0.0 \
+      --min-p 0.00 \
+      -c 262144 \
+      --host 0.0.0.0 \
+      --port 8080 \
+      --parallel 1
 }
