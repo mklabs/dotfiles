@@ -6,3 +6,6 @@ alias ls=lls
 
 # lazygit
 alias lg=lazygit
+
+# opencode
+alias oc=opencode
